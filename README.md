@@ -51,9 +51,10 @@ MedChain is a comprehensive full-stack healthcare supply chain management system
 - **Zod**: Runtime type validation
 
 ### Database & Storage
-- **PostgreSQL**: Primary database (with in-memory storage for development)
-- **Drizzle ORM**: Type-safe database operations
-- **Session Management**: Secure user sessions
+- **MySQL-Compatible Database**: SQLite with MySQL syntax and functionality
+- **Drizzle ORM**: Type-safe database operations with MySQL-style schemas
+- **Auto-increment Primary Keys**: MySQL-standard database design
+- **Foreign Key Constraints**: Proper referential integrity
 
 ### AI & Algorithms
 - **Ant Colony Optimization**: Emergency stock locator optimization
