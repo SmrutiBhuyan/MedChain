@@ -17,21 +17,21 @@ async function seedDatabase() {
     const adminUser = await db.insert(users).values({
       name: "Admin User",
       email: "admin@medchain.com",
-      password: await bcrypt.hash("admin123", 10),
+      password: await bcrypt.hash("password", 10),
       role: "admin",
     }).returning();
 
     const pharmacyUser = await db.insert(users).values({
       name: "Pharmacy Manager",
       email: "pharmacy@medchain.com",
-      password: await bcrypt.hash("pharmacy123", 10),
+      password: await bcrypt.hash("password", 10),
       role: "pharmacy",
     }).returning();
 
     const patientUser = await db.insert(users).values({
       name: "Patient User",
       email: "patient@medchain.com",
-      password: await bcrypt.hash("patient123", 10),
+      password: await bcrypt.hash("password", 10),
       role: "patient",
     }).returning();
 
