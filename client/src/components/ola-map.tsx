@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
@@ -44,48 +44,68 @@ const OlaMap: React.FC<OlaMapProps> = ({
   useEffect(() => {
     if (!mapContainer.current || !apiKey) return;
 
-    try {
-      // Initialize Ola Maps
-      const map = new maplibregl.Map({
-        container: mapContainer.current,
-        style: `https://api.olamaps.io/tiles/v1/styles/default-light-standard/style.json?api_key=${apiKey}`,
-        center: center,
-        zoom: zoom,
-        attributionControl: false
-      });
+    let isMounted = true;
+    let map: maplibregl.Map | null = null;
 
-      // Add attribution
-      map.addControl(new maplibregl.AttributionControl({
-        customAttribution: '© Ola Maps'
-      }), 'bottom-right');
+    const initializeMap = async () => {
+      try {
+        // Initialize Ola Maps
+        map = new maplibregl.Map({
+          container: mapContainer.current!,
+          style: `https://api.olamaps.io/tiles/v1/styles/default-light-standard/style.json?api_key=${apiKey}`,
+          center: center,
+          zoom: zoom,
+          attributionControl: false
+        });
 
-      // Add navigation controls
-      map.addControl(new maplibregl.NavigationControl(), 'top-right');
+        // Add attribution
+        map.addControl(new maplibregl.AttributionControl({
+          customAttribution: '© Ola Maps'
+        }), 'bottom-right');
 
-      // Add fullscreen control
-      map.addControl(new maplibregl.FullscreenControl(), 'top-right');
+        // Add navigation controls
+        map.addControl(new maplibregl.NavigationControl(), 'top-right');
 
-      map.on('load', () => {
-        setIsLoading(false);
-        console.log('🗺️ Ola Maps loaded successfully');
-      });
+        // Add fullscreen control
+        map.addControl(new maplibregl.FullscreenControl(), 'top-right');
 
-      map.on('error', (e) => {
-        console.error('Map error:', e);
-        setError('Failed to load map. Please check your API key.');
-        setIsLoading(false);
-      });
+        map.on('load', () => {
+          if (isMounted) {
+            setIsLoading(false);
+            console.log('🗺️ Ola Maps loaded successfully');
+          }
+        });
 
-      mapInstance.current.map = map;
+        map.on('error', (e) => {
+          if (isMounted) {
+            console.error('Map error:', e);
+            setError('Failed to load map. Please check your API key.');
+            setIsLoading(false);
+          }
+        });
 
-      return () => {
-        map.remove();
-      };
-    } catch (err) {
-      console.error('Error initializing map:', err);
-      setError('Failed to initialize map');
-      setIsLoading(false);
-    }
+        mapInstance.current.map = map;
+      } catch (err) {
+        if (isMounted) {
+          console.error('Error initializing map:', err);
+          setError('Failed to initialize map');
+          setIsLoading(false);
+        }
+      }
+    };
+
+    initializeMap();
+
+    return () => {
+      isMounted = false;
+      try {
+        if (map && typeof map.remove === 'function') {
+          map.remove();
+        }
+      } catch (error) {
+        console.log('Map cleanup error:', error);
+      }
+    };
   }, [apiKey, center, zoom]);
 
   // Add pharmacy markers
@@ -95,7 +115,15 @@ const OlaMap: React.FC<OlaMapProps> = ({
     const map = mapInstance.current.map;
 
     // Clear existing markers
-    mapInstance.current.markers.forEach(marker => marker.remove());
+    mapInstance.current.markers.forEach(marker => {
+      try {
+        if (marker && typeof marker.remove === 'function') {
+          marker.remove();
+        }
+      } catch (error) {
+        console.log('Marker cleanup error:', error);
+      }
+    });
     mapInstance.current.markers = [];
 
     // Add new markers
@@ -115,69 +143,56 @@ const OlaMap: React.FC<OlaMapProps> = ({
         display: flex;
         align-items: center;
         justify-content: center;
+        font-size: 14px;
         color: white;
         font-weight: bold;
-        font-size: 12px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        transition: all 0.2s ease;
       `;
-      markerElement.innerHTML = '🏥';
+      markerElement.innerHTML = '💊';
 
-      // Create popup content
-      const popupContent = `
-        <div style="padding: 10px; max-width: 250px;">
-          <h3 style="margin: 0 0 8px 0; font-size: 14px; font-weight: bold; color: #dc2626;">
-            ${pharmacy.name}
-          </h3>
-          <p style="margin: 4px 0; font-size: 12px; color: #666;">
-            📍 ${pharmacy.address}
-          </p>
-          <p style="margin: 4px 0; font-size: 12px; color: #666;">
-            📞 ${pharmacy.contact}
-          </p>
-          ${pharmacy.drugName && pharmacy.quantity ? `
-            <p style="margin: 4px 0; font-size: 12px; color: #059669; font-weight: bold;">
-              💊 ${pharmacy.drugName}: ${pharmacy.quantity} units available
-            </p>
-          ` : ''}
-          <button 
-            onclick="window.selectPharmacy && window.selectPharmacy(${pharmacy.id})"
-            style="
-              margin-top: 8px;
-              padding: 4px 8px;
-              background: #dc2626;
-              color: white;
-              border: none;
-              border-radius: 4px;
-              cursor: pointer;
-              font-size: 11px;
-            "
-          >
-            Select This Pharmacy
-          </button>
-        </div>
-      `;
+      // Add hover effect
+      markerElement.addEventListener('mouseenter', () => {
+        markerElement.style.transform = 'scale(1.1)';
+        markerElement.style.zIndex = '1000';
+      });
 
+      markerElement.addEventListener('mouseleave', () => {
+        markerElement.style.transform = 'scale(1)';
+        markerElement.style.zIndex = '1';
+      });
+
+      // Create marker
+      const marker = new maplibregl.Marker(markerElement)
+        .setLngLat([pharmacy.lng, pharmacy.lat])
+        .addTo(map);
+
+      // Create popup
       const popup = new maplibregl.Popup({
-        offset: 15,
+        offset: 25,
         closeButton: true,
         closeOnClick: false
-      }).setHTML(popupContent);
+      }).setHTML(`
+        <div class="p-3">
+          <h3 class="font-semibold text-lg mb-2">${pharmacy.name}</h3>
+          <p class="text-sm text-gray-600 mb-2">${pharmacy.address}</p>
+          <p class="text-sm text-gray-600 mb-2">📞 ${pharmacy.contact}</p>
+          ${pharmacy.quantity ? `<p class="text-sm font-medium text-green-600">Stock: ${pharmacy.quantity} units</p>` : ''}
+          ${pharmacy.drugName ? `<p class="text-sm text-blue-600">Drug: ${pharmacy.drugName}</p>` : ''}
+        </div>
+      `);
 
-      const marker = new maplibregl.Marker({ element: markerElement })
-        .setLngLat([pharmacy.lng, pharmacy.lat])
-        .setPopup(popup)
-        .addTo(map);
+      // Add click handler
+      markerElement.addEventListener('click', (e) => {
+        e.stopPropagation();
+        popup.addTo(map);
+        if (onPharmacyClick) {
+          onPharmacyClick(pharmacy);
+        }
+      });
 
       mapInstance.current.markers.push(marker);
     });
-
-    // Set up global callback for pharmacy selection
-    (window as any).selectPharmacy = (pharmacyId: number) => {
-      const pharmacy = pharmacies.find(p => p.id === pharmacyId);
-      if (pharmacy && onPharmacyClick) {
-        onPharmacyClick(pharmacy);
-      }
-    };
 
     // Fit map to show all markers
     if (pharmacies.length > 0) {
@@ -188,81 +203,34 @@ const OlaMap: React.FC<OlaMapProps> = ({
         }
       });
       
-      map.fitBounds(bounds, { 
-        padding: 50,
-        maxZoom: 15
-      });
+      try {
+        map.fitBounds(bounds, { padding: 50 });
+      } catch (error) {
+        console.log('Error fitting bounds:', error);
+      }
     }
-
   }, [pharmacies, onPharmacyClick]);
 
   if (error) {
     return (
-      <div 
-        style={{ 
-          width, 
-          height, 
-          display: 'flex', 
-          alignItems: 'center', 
-          justifyContent: 'center', 
-          backgroundColor: '#f3f4f6', 
-          border: '1px solid #e5e7eb',
-          borderRadius: '8px',
-          color: '#dc2626'
-        }}
-      >
-        <div style={{ textAlign: 'center' }}>
-          <p style={{ margin: '0 0 8px 0', fontSize: '16px', fontWeight: 'bold' }}>
-            🗺️ Map Loading Error
-          </p>
-          <p style={{ margin: 0, fontSize: '14px' }}>
-            {error}
-          </p>
+      <div className="w-full h-96 flex items-center justify-center bg-gray-100 rounded-lg">
+        <div className="text-center">
+          <p className="text-red-600 font-medium">Map Error</p>
+          <p className="text-gray-600 text-sm mt-1">{error}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div style={{ width, height, position: 'relative' }}>
-      <div 
-        ref={mapContainer} 
-        style={{ 
-          width: '100%', 
-          height: '100%',
-          borderRadius: '8px',
-          overflow: 'hidden'
-        }} 
-      />
+    <div className="relative w-full" style={{ height, width }}>
+      <div ref={mapContainer} className="w-full h-full rounded-lg overflow-hidden" />
       
       {isLoading && (
-        <div 
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: 'rgba(255, 255, 255, 0.8)',
-            zIndex: 1000
-          }}
-        >
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ 
-              width: '40px', 
-              height: '40px', 
-              border: '4px solid #f3f4f6',
-              borderTop: '4px solid #dc2626',
-              borderRadius: '50%',
-              animation: 'spin 1s linear infinite',
-              margin: '0 auto 8px'
-            }} />
-            <p style={{ margin: 0, fontSize: '14px', color: '#666' }}>
-              Loading Ola Maps...
-            </p>
+        <div className="absolute inset-0 flex items-center justify-center bg-gray-100 rounded-lg">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-2"></div>
+            <p className="text-gray-600">Loading map...</p>
           </div>
         </div>
       )}
