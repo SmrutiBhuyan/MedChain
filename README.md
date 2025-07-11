@@ -51,11 +51,11 @@ MedChain is a comprehensive full-stack healthcare supply chain management system
 - **Zod**: Runtime type validation
 
 ### Database & Storage
-- **PostgreSQL**: Production-ready relational database with full ACID compliance
-- **Drizzle ORM**: Type-safe database operations with PostgreSQL-specific features
-- **Auto-increment Primary Keys**: PostgreSQL `generatedAlwaysAsIdentity()` implementation
-- **Foreign Key Constraints**: Proper referential integrity with PostgreSQL foreign keys
-- **Cross-Platform Compatibility**: No SQLite native binding issues
+- **SQLite**: Simple file-based database for easy development and deployment
+- **Drizzle ORM**: Type-safe database operations with SQLite support
+- **Auto-increment Primary Keys**: SQLite `AUTOINCREMENT` implementation
+- **Foreign Key Constraints**: Proper referential integrity with SQLite foreign keys
+- **Zero Configuration**: No external database server required
 
 ### AI & Algorithms
 - **Ant Colony Optimization**: Emergency stock locator optimization
@@ -68,20 +68,20 @@ MedChain is a comprehensive full-stack healthcare supply chain management system
 - Node.js 18 or higher
 - npm or yarn package manager
 - Modern web browser with geolocation support
-- PostgreSQL database (provided automatically in Replit environment)
+- SQLite database (automatically created as medchain.db file)
 
 ### Step 1: Environment Setup
-The system uses PostgreSQL with all required environment variables pre-configured:
+The system uses SQLite with a local database file:
 ```bash
-# Database connection is automatically available via:
-# DATABASE_URL, PGHOST, PGPORT, PGUSER, PGPASSWORD, PGDATABASE
+# Database file: medchain.db (automatically created)
+# No environment variables needed for basic operation
 ```
 
 ### Step 2: Install Dependencies
 ```bash
 # All dependencies are already installed including:
 # - React/TypeScript frontend with Vite
-# - Express.js backend with PostgreSQL
+# - Express.js backend with SQLite
 # - Drizzle ORM for database operations
 # - Ola Maps integration with OpenStreetMap fallback
 # - Complete UI components with shadcn/ui
@@ -91,8 +91,8 @@ npm list --depth=0
 ### Step 3: Database Initialization
 ```bash
 # Database schema is automatically created and seeded
-# PostgreSQL tables: users, drugs, pharmacies, inventory, verifications
-# Sample data includes 3+ records in each table
+# SQLite tables: users, drugs, pharmacies, inventory, verifications
+# Sample data includes 5 drugs, 5 pharmacies, 20 inventory records
 ```
 
 ### Step 4: Start the Application

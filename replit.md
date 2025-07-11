@@ -21,7 +21,7 @@ Preferred communication style: Simple, everyday language.
 
 ### Backend Architecture
 - **Runtime**: Node.js with Express.js framework
-- **Database**: PostgreSQL with Drizzle ORM for type-safe database operations
+- **Database**: SQLite with Drizzle ORM for type-safe database operations
 - **Authentication**: JWT-based authentication with bcrypt for password hashing
 - **API Design**: RESTful API with role-based access control
 - **Session Management**: Session-based authentication for enhanced security
@@ -87,9 +87,9 @@ Preferred communication style: Simple, everyday language.
 ## External Dependencies
 
 ### Database & ORM
-- **PostgreSQL**: Primary database (configured via Drizzle)
+- **SQLite**: Primary database (configured via Drizzle)
 - **Drizzle ORM**: Type-safe database operations
-- **@neondatabase/serverless**: Serverless PostgreSQL adapter
+- **better-sqlite3**: Native SQLite driver for Node.js
 
 ### Authentication & Security
 - **JWT**: Token-based authentication
@@ -151,13 +151,12 @@ Preferred communication style: Simple, everyday language.
 
 ## Recent Changes: Latest modifications with dates
 
-### January 2025 - Map Rendering Fix & Documentation Update (COMPLETE)
-- **Ola Maps Integration Fix**: Updated API URLs to use correct endpoint format for Ola Maps
-- **Intelligent Fallback System**: Added automatic fallback to OpenStreetMap when Ola Maps API is unavailable
-- **Map Attribution**: Dynamic attribution based on which map service is being used
-- **Comprehensive Documentation**: Updated README.md, LOCALHOST_SETUP.md, and QUICK_START.md with PostgreSQL setup instructions
-- **Complete Setup Guide**: Created new COMPLETE_SETUP_GUIDE.md with all localhost setup instructions
-- **Map Status**: Maps now work reliably with both Ola Maps (primary) and OpenStreetMap (fallback)
+### January 2025 - SQLite Database Migration (COMPLETE)
+- **Database Simplification**: Migrated from PostgreSQL back to SQLite for easier development and deployment
+- **Schema Conversion**: Updated all tables to use SQLite-compatible column types and auto-increment
+- **Zero Configuration**: Eliminated need for external database server setup
+- **File-Based Storage**: Database stored as simple medchain.db file for easy backup and portability
+- **Development Focused**: Optimized for rapid development and testing without complex database setup
 
 ## Recent Changes: Latest modifications with dates
 
@@ -179,14 +178,14 @@ Preferred communication style: Simple, everyday language.
 - **Enhanced Landing Page**: Updated to showcase all blockchain, IoT, AI, and voice capabilities with feature highlights
 - **Complete Backend APIs**: All advanced features backed by comprehensive API endpoints with real-time data simulation
 
-### January 2025 - PostgreSQL Database Migration (COMPLETE)
-- **PostgreSQL Integration**: Migrated from SQLite to PostgreSQL for better cross-platform compatibility
-- **Schema Migration**: Converted all tables to PostgreSQL format using Drizzle ORM with proper timestamp and boolean types
-- **Auto-Increment Primary Keys**: All tables use PostgreSQL-style generatedAlwaysAsIdentity() for primary keys
-- **Foreign Key Constraints**: Proper referential integrity with PostgreSQL foreign key relationships
-- **Data Seeding**: Automatic database seeding with 5 drugs, 5 pharmacies, 20 inventory items, and 3 verifications
-- **Cross-Platform Compatibility**: Resolved SQLite native bindings issues on Windows systems
-- **Production Ready**: Full database integration with proper error handling and transactions
+### January 2025 - SQLite Database Migration (COMPLETE)
+- **SQLite Integration**: Migrated back to SQLite for simplified development and deployment
+- **Schema Migration**: Converted all tables to SQLite format using Drizzle ORM with proper column types
+- **Auto-Increment Primary Keys**: All tables use SQLite-style AUTOINCREMENT primary keys
+- **Foreign Key Constraints**: Proper referential integrity with SQLite foreign key relationships
+- **Data Seeding**: Automatic database seeding with 5 drugs, 5 pharmacies, 20 inventory items, and 3 users
+- **Zero Configuration**: No external database server required, simple file-based storage
+- **Development Ready**: Full database integration with easy backup and portability
 
 ### December 2024 - Core Implementation
 - **Ant Colony Optimization**: Implemented ACO algorithm for Emergency Drug Locator

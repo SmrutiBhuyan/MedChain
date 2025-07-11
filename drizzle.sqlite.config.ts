@@ -5,6 +5,6 @@ export default defineConfig({
   schema: "./shared/schema.ts",
   dialect: "sqlite",
   dbCredentials: {
-    url: "./medchain.db",
+    url: "medchain.db",
   },
 });

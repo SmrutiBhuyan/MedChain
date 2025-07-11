@@ -1,14 +1,8 @@
-import { drizzle } from 'drizzle-orm/postgres-js';
-import postgres from 'postgres';
+import { drizzle } from "drizzle-orm/better-sqlite3";
+import Database from "better-sqlite3";
 import * as schema from "@shared/schema";
 
-if (!process.env.DATABASE_URL) {
-  throw new Error(
-    "DATABASE_URL must be set. Did you forget to provision a database?",
-  );
-}
+const sqlite = new Database("medchain.db");
+export const db = drizzle(sqlite, { schema });
 
-const client = postgres(process.env.DATABASE_URL);
-export const db = drizzle(client, { schema });
-
-console.log('PostgreSQL database connected successfully');
+console.log('SQLite database connected successfully');
