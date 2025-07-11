@@ -4,7 +4,7 @@ import {
   type InsertUser, type InsertDrug, type InsertPharmacy, type InsertInventory, type InsertVerification 
 } from "@shared/schema";
 import { db } from "./db";
-import { eq, and, like, ilike } from "drizzle-orm";
+import { eq, and, like, ilike, sql } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 
 export interface IStorage {
@@ -72,7 +72,7 @@ export class MemStorage implements IStorage {
       id: this.currentIds.users++,
       name: "Admin User",
       email: "admin@medchain.com",
-      password: await bcrypt.hash("admin123", 10),
+      password: await bcrypt.hash("password", 10),
       role: "admin",
       createdAt: new Date(),
     };
@@ -83,7 +83,7 @@ export class MemStorage implements IStorage {
       id: this.currentIds.users++,
       name: "Apollo Pharmacy",
       email: "apollo@medchain.com",
-      password: await bcrypt.hash("pharmacy123", 10),
+      password: await bcrypt.hash("password", 10),
       role: "pharmacy",
       createdAt: new Date(),
     };
@@ -94,7 +94,7 @@ export class MemStorage implements IStorage {
       id: this.currentIds.users++,
       name: "Dr. John Doe",
       email: "doctor@medchain.com",
-      password: await bcrypt.hash("patient123", 10),
+      password: await bcrypt.hash("password", 10),
       role: "patient",
       createdAt: new Date(),
     };
@@ -601,4 +601,4 @@ export class DatabaseStorage implements IStorage {
   }
 }
 
-export const storage = new DatabaseStorage();
+export const storage = new MemStorage();

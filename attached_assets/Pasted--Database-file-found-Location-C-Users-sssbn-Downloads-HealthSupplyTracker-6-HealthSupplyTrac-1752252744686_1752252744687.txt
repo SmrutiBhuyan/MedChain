@@ -1,0 +1,19 @@
+ Database file found
+📁 Location: C:\Users\sssbn\Downloads\HealthSupplyTracker (6)\HealthSupplyTracker\medchain.db
+📊 Size: 0.06 MB (61,440 bytes)
+❌ Database error: Could not locate the bindings file. Tried:
+ → C:\Users\sssbn\Downloads\HealthSupplyTracker (6)\HealthSupplyTracker\node_modules\better-sqlite3\build\better_sqlite3.node
+ → C:\Users\sssbn\Downloads\HealthSupplyTracker (6)\HealthSupplyTracker\node_modules\better-sqlite3\build\Debug\better_sqlite3.node
+ → C:\Users\sssbn\Downloads\HealthSupplyTracker (6)\HealthSupplyTracker\node_modules\better-sqlite3\build\Release\better_sqlite3.node
+ → C:\Users\sssbn\Downloads\HealthSupplyTracker (6)\HealthSupplyTracker\node_modules\better-sqlite3\out\Debug\better_sqlite3.node
+ → C:\Users\sssbn\Downloads\HealthSupplyTracker (6)\HealthSupplyTracker\node_modules\better-sqlite3\Debug\better_sqlite3.node
+ → C:\Users\sssbn\Downloads\HealthSupplyTracker (6)\HealthSupplyTracker\node_modules\better-sqlite3\out\Release\better_sqlite3.node
+ → C:\Users\sssbn\Downloads\HealthSupplyTracker (6)\HealthSupplyTracker\node_modules\better-sqlite3\Release\better_sqlite3.node
+ → C:\Users\sssbn\Downloads\HealthSupplyTracker (6)\HealthSupplyTracker\node_modules\better-sqlite3\build\default\better_sqlite3.node
+ → C:\Users\sssbn\Downloads\HealthSupplyTracker (6)\HealthSupplyTracker\node_modules\better-sqlite3\compiled\20.13.1\win32\x64\better_sqlite3.node
+ → C:\Users\sssbn\Downloads\HealthSupplyTracker (6)\HealthSupplyTracker\node_modules\better-sqlite3\addon-build\release\install-root\better_sqlite3.node
+ → C:\Users\sssbn\Downloads\HealthSupplyTracker (6)\HealthSupplyTracker\node_modules\better-sqlite3\addon-build\debug\install-root\better_sqlite3.node
+ → C:\Users\sssbn\Downloads\HealthSupplyTracker (6)\HealthSupplyTracker\node_modules\better-sqlite3\addon-build\default\install-root\better_sqlite3.node
+ → C:\Users\sssbn\Downloads\HealthSupplyTracker (6)\HealthSupplyTracker\node_modules\better-sqlite3\lib\binding\node-v115-win32-x64\better_sqlite3.node
+PS C:\Users\sssbn\Downloads\HealthSupplyTracker (6)\HealthSupplyTracker> ^C
+PS C:\Users\sssbn\Downloads\HealthSupplyTracker (6)\HealthSupplyTracker> 

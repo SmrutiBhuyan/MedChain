@@ -1,19 +1,19 @@
-import { sqliteTable, text, integer, real } from "drizzle-orm/sqlite-core";
+import { pgTable, text, integer, real, timestamp, boolean } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
-export const users = sqliteTable("users", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
+export const users = pgTable("users", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
   name: text("name").notNull(),
   email: text("email").notNull().unique(),
   password: text("password").notNull(),
   role: text("role").notNull(), // 'patient', 'pharmacy', 'admin'
-  createdAt: text("created_at").default("CURRENT_TIMESTAMP").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
-export const drugs = sqliteTable("drugs", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
+export const drugs = pgTable("drugs", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
   name: text("name").notNull(),
   batchNumber: text("batch_number").notNull().unique(),
   manufacturer: text("manufacturer").notNull(),
@@ -22,12 +22,12 @@ export const drugs = sqliteTable("drugs", {
   strength: text("strength"),
   description: text("description"),
   qrCodeUrl: text("qr_code_url"),
-  isCounterfeit: integer("is_counterfeit", { mode: "boolean" }).default(false).notNull(),
-  createdAt: text("created_at").default("CURRENT_TIMESTAMP").notNull(),
+  isCounterfeit: boolean("is_counterfeit").default(false).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
-export const pharmacies = sqliteTable("pharmacies", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
+export const pharmacies = pgTable("pharmacies", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
   name: text("name").notNull(),
   city: text("city").notNull(),
   address: text("address").notNull(),
@@ -35,24 +35,24 @@ export const pharmacies = sqliteTable("pharmacies", {
   lat: real("lat"),
   lng: real("lng"),
   userId: integer("user_id").references(() => users.id),
-  createdAt: text("created_at").default("CURRENT_TIMESTAMP").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
-export const inventory = sqliteTable("inventory", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
+export const inventory = pgTable("inventory", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
   pharmacyId: integer("pharmacy_id").references(() => pharmacies.id).notNull(),
   drugId: integer("drug_id").references(() => drugs.id).notNull(),
   quantity: integer("quantity").notNull(),
-  lastUpdated: text("last_updated").default("CURRENT_TIMESTAMP").notNull(),
+  lastUpdated: timestamp("last_updated").defaultNow().notNull(),
 });
 
-export const verifications = sqliteTable("verifications", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
+export const verifications = pgTable("verifications", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
   drugId: integer("drug_id").references(() => drugs.id).notNull(),
   userId: integer("user_id").references(() => users.id),
   location: text("location"),
   result: text("result").notNull(), // 'genuine', 'counterfeit'
-  timestamp: text("timestamp").default("CURRENT_TIMESTAMP").notNull(),
+  timestamp: timestamp("timestamp").defaultNow().notNull(),
 });
 
 // Insert schemas

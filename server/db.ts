@@ -1,13 +1,14 @@
-import { drizzle } from 'drizzle-orm/better-sqlite3';
-import Database from 'better-sqlite3';
+import { drizzle } from 'drizzle-orm/postgres-js';
+import postgres from 'postgres';
 import * as schema from "@shared/schema";
 
-// Create SQLite database with MySQL-like functionality
-const sqlite = new Database('medchain.db');
+if (!process.env.DATABASE_URL) {
+  throw new Error(
+    "DATABASE_URL must be set. Did you forget to provision a database?",
+  );
+}
 
-// Enable foreign keys support
-sqlite.pragma('foreign_keys = ON');
+const client = postgres(process.env.DATABASE_URL);
+export const db = drizzle(client, { schema });
 
-console.log('SQLite database (MySQL-compatible) created successfully');
-
-export const db = drizzle(sqlite, { schema });
+console.log('PostgreSQL database connected successfully');
