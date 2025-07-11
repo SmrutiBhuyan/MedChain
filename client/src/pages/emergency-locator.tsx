@@ -81,7 +81,7 @@ export default function EmergencyLocator() {
 
   const { data: acoResponse, isLoading, error } = useQuery({
     queryKey: ["/api/emergency-locator", drugName, city, userLocation?.lat, userLocation?.lng],
-    queryFn: async (): Promise<ACOResponse> => {
+    queryFn: async ({ signal }): Promise<ACOResponse> => {
       const params = new URLSearchParams({
         drugName,
         city,
@@ -91,13 +91,19 @@ export default function EmergencyLocator() {
         })
       });
       
-      const response = await fetch(`/api/emergency-locator?${params}`);
+      const response = await fetch(`/api/emergency-locator?${params}`, { signal });
       if (!response.ok) {
         throw new Error("Failed to search inventory");
       }
       return response.json();
     },
     enabled: searchPerformed && !!drugName && !!city,
+    retry: (failureCount, error) => {
+      if (error instanceof Error && error.name === 'AbortError') {
+        return false;
+      }
+      return failureCount < 2;
+    },
   });
 
   const handleSearch = (e: React.FormEvent) => {
