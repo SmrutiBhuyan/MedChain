@@ -1,0 +1,224 @@
+1. 🔐 Landing Page (Public)
+Path: /
+
+Description: Intro to MedChain with high-level mission statement: secure, traceable, AI-powered healthcare supply chain.
+
+Features:
+
+Hero section with slogan (e.g., "Track Trust. Fight Fakes.")
+
+CTA buttons: Verify Drug, Find Medicines, Login
+
+Brief overview of features (scroll-based sections)
+
+Footer with contact, policy links
+
+2. 📦 Drug Verification Page
+Path: /verify-drug
+
+Description: Verify authenticity of a drug using QR code or batch number.
+
+Features:
+
+QR code scanner input (using zxing-js)
+
+Manual batch number input
+
+Displays:
+
+Drug name
+
+Manufacturer
+
+Expiry date
+
+Authenticity status: ✅ Genuine / ❌ Counterfeit
+
+Blockchain TXID or verification logs
+
+(Optional) Report Suspicious button
+
+3. 🗺️ Emergency Stock Locator Page
+Path: /emergency-locator
+
+Description: Find medicine stock availability in real-time by drug name + city.
+
+Features:
+
+Search bar: drug name + city input
+
+Map view (using Google Maps or OpenStreetMap API)
+
+List view of matching pharmacies:
+
+Name, address, phone
+
+Stock quantity
+
+Directions link
+
+Real-time filtering and distance sort
+
+4. 👨‍⚕️ Patient/Doctor Portal
+Path: /portal
+
+Description: Simple dashboard for doctors and patients to use verification and locator tools.
+
+Features:
+
+Quick access to:
+
+Drug verification
+
+Emergency locator
+
+View recent verifications
+
+User profile with basic info and role
+
+Login required
+
+5. 🏪 Pharmacy Login Page
+Path: /pharmacy-login
+
+Description: Login portal for pharmacies to manage their stock.
+
+Features:
+
+Email/password login (JWT protected)
+
+Role-based redirection (pharmacy dashboard)
+
+Error messages and forgot password placeholder
+
+6. 📊 Pharmacy Dashboard
+Path: /pharmacy-dashboard
+
+Description: Portal for pharmacies to manage drug inventory.
+
+Features:
+
+Add/edit/remove stock
+
+View real-time stock table
+
+Expiring soon alert list
+
+Drug reorder suggestions
+
+Update location/contact info
+
+7. 🛠️ Admin Login
+Path: /admin-login
+
+Description: Restricted login for MedChain administrators.
+
+Features:
+
+JWT-based secure login
+
+2FA placeholder (optional)
+
+Redirects to admin dashboard
+
+8. 🧮 Admin Dashboard
+Path: /admin-dashboard
+
+Description: Powerful control panel for global system management.
+
+Features:
+
+Add/edit/delete:
+
+Drugs
+
+Pharmacies
+
+Users
+
+View verification logs with filters (genuine/counterfeit)
+
+Flag/report system for suspicious batches
+
+View emergency stock trends
+
+Analytics: verification rate, pharmacy activity, demand heatmap
+
+9. ➕ Add Drug Page
+Path: /admin/add-drug
+
+Description: Form to add a new drug to the blockchain-backed registry.
+
+Fields:
+
+Drug name
+
+Manufacturer
+
+Batch number (unique)
+
+Expiry date
+
+QR code generator (automatically creates and saves QR)
+
+Submit button saves to DB and records transaction to blockchain
+
+10. 📂 Drug Details Page
+Path: /drug/:batchNumber
+
+Description: Public or internal page showing details of a specific drug.
+
+Features:
+
+Full metadata
+
+Verification history
+
+Blockchain explorer link
+
+Status (Active / Expired / Counterfeit)
+
+11. 🙋 Support & Contact Page
+Path: /support
+
+Description: General user support for help, reporting issues, contact info.
+
+Features:
+
+Contact form (name, email, message)
+
+FAQ section
+
+Option to report counterfeit batch
+
+12. 🧠 AI Assistant Placeholder (Optional Future Page)
+Path: /assistant
+
+Description: Placeholder for an AI chatbot or virtual assistant.
+
+Features:
+
+Ask questions like:
+
+“Is batch #X safe?”
+
+“Find paracetamol near Nagpur”
+
+Chat UI (with potential Rasa/Dialogflow/OpenAI API integration)
+
+13. 🔒 Authentication Pages
+Path:
+
+/login
+
+/register
+
+Description: Auth pages for users (doctors/patients) and pharmacies.
+
+Features:
+
+Secure login with JWT
+
+Role-based redirects
+
+Register page (basic signup with role selector)
