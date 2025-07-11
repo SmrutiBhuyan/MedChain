@@ -14,6 +14,14 @@ export default function Header() {
     { name: "Verify Drug", href: "/verify-drug" },
     { name: "Emergency Stock", href: "/emergency-locator" },
     { name: "Portal", href: "/portal" },
+  ];
+
+  const advancedFeatures = [
+    { name: "Blockchain Tracker", href: "/blockchain-tracker" },
+    { name: "IoT Monitoring", href: "/iot-monitoring" },
+    { name: "AI Forecasting", href: "/ai-forecasting" },
+    { name: "IVR System", href: "/ivr-system" },
+    { name: "Incentives", href: "/incentive-system" },
     { name: "Support", href: "/support" },
   ];
 
@@ -30,12 +38,12 @@ export default function Header() {
             </Link>
             
             {/* Desktop Navigation */}
-            <nav className="hidden md:ml-10 md:flex space-x-8">
+            <nav className="hidden lg:ml-10 lg:flex space-x-6">
               {navigation.map((item) => (
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`px-3 py-2 text-sm font-medium transition-colors ${
+                  className={`px-2 py-2 text-sm font-medium transition-colors ${
                     isActive(item.href)
                       ? "text-primary border-b-2 border-primary"
                       : "text-gray-500 hover:text-primary"
@@ -44,6 +52,26 @@ export default function Header() {
                   {item.name}
                 </Link>
               ))}
+              
+              {/* Advanced Features Dropdown */}
+              <div className="relative group">
+                <button className="px-2 py-2 text-sm font-medium text-gray-500 hover:text-primary transition-colors">
+                  Advanced ↓
+                </button>
+                <div className="absolute top-full left-0 w-48 bg-white shadow-lg border rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                  {advancedFeatures.map((item) => (
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      className={`block px-4 py-2 text-sm transition-colors hover:bg-gray-50 ${
+                        isActive(item.href) ? "text-primary bg-blue-50" : "text-gray-700"
+                      }`}
+                    >
+                      {item.name}
+                    </Link>
+                  ))}
+                </div>
+              </div>
             </nav>
           </div>
 

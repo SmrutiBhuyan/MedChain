@@ -710,6 +710,171 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Blockchain routes
+  app.get('/api/blockchain/transactions', async (req, res) => {
+    try {
+      const { query, type } = req.query;
+      
+      // Mock blockchain transaction data
+      const mockTransactions = [
+        {
+          id: '1',
+          txHash: '0x1234567890abcdef1234567890abcdef12345678',
+          blockNumber: 18542156,
+          timestamp: new Date().toISOString(),
+          drugId: 1,
+          drugName: 'Aspirin',
+          batchNumber: 'ASP001',
+          action: 'created',
+          fromAddress: '0x0000000000000000000000000000000000000000',
+          toAddress: '0xManufacturer123...abc',
+          gasUsed: 65000,
+          status: 'confirmed',
+          metadata: {
+            location: 'Mumbai, India',
+            temperature: 25.5,
+            humidity: 60,
+            verifier: 'PharmaCorp QA'
+          }
+        }
+      ];
+      
+      res.json(mockTransactions);
+    } catch (error) {
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
+  // IoT routes
+  app.get('/api/iot/sensors', async (req, res) => {
+    try {
+      // Mock IoT sensor data
+      const mockSensors = [
+        {
+          id: 'temp_001',
+          name: 'Cold Storage Monitor',
+          type: 'temperature',
+          pharmacyId: 1,
+          pharmacyName: 'Central Pharmacy',
+          location: 'Cold Storage Room',
+          status: 'online',
+          lastReading: {
+            value: 4.5 + Math.random() * 2,
+            unit: '°C',
+            timestamp: new Date().toISOString()
+          },
+          thresholds: { min: 2, max: 8, optimal: { min: 2, max: 8 } },
+          batteryLevel: 85,
+          readings: Array.from({ length: 24 }, (_, i) => ({
+            timestamp: new Date(Date.now() - i * 60000).toISOString(),
+            value: 4 + Math.random() * 2
+          }))
+        }
+      ];
+      
+      res.json(mockSensors);
+    } catch (error) {
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
+  // AI Forecasting routes
+  app.get('/api/ai/forecasting', async (req, res) => {
+    try {
+      const { timeframe, pharmacy, category } = req.query;
+      
+      // Mock AI forecasting data
+      const mockForecasts = [
+        {
+          drugId: 1,
+          drugName: "Aspirin",
+          currentStock: 250,
+          predictedDemand: 320,
+          recommendedOrder: 150,
+          confidence: 92,
+          trend: 'increasing',
+          factors: ['Flu season approaching', 'Historical demand pattern'],
+          timeframe: timeframe || '1month',
+          riskLevel: 'medium'
+        }
+      ];
+      
+      res.json(mockForecasts);
+    } catch (error) {
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
+  // IVR routes
+  app.post('/api/ivr/call', async (req, res) => {
+    try {
+      const { purpose, language, phoneNumber } = req.body;
+      
+      const callId = Date.now().toString();
+      const mockCall = {
+        id: callId,
+        phoneNumber: phoneNumber || '+91-1800-MEDCHAIN',
+        language: language || 'en',
+        purpose,
+        status: 'active',
+        startTime: new Date().toISOString(),
+        transcript: [`System: Welcome to MedChain IVR. How can I help you today?`]
+      };
+      
+      res.json(mockCall);
+    } catch (error) {
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
+  // Incentive routes
+  app.get('/api/incentives/rewards', async (req, res) => {
+    try {
+      const mockRewards = [
+        {
+          id: '1',
+          type: 'verification',
+          title: 'Drug Verification Bonus',
+          description: 'Earn cashback for each successful drug verification',
+          points: 10,
+          cashback: 5,
+          requirements: ['Valid drug verification', 'Batch number must exist'],
+          isActive: true,
+          participants: 1247,
+          completionRate: 85
+        }
+      ];
+      
+      res.json(mockRewards);
+    } catch (error) {
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
+  app.post('/api/incentives/withdraw', async (req, res) => {
+    try {
+      const { upiId, amount } = req.body;
+      
+      if (!upiId || !amount) {
+        return res.status(400).json({ message: 'UPI ID and amount required' });
+      }
+      
+      // Mock withdrawal processing
+      const withdrawalId = `WD_${Date.now()}`;
+      
+      res.json({
+        withdrawalId,
+        amount,
+        upiId,
+        status: 'initiated',
+        processingTime: '24-48 hours',
+        message: `Withdrawal of ₹${amount} initiated to ${upiId}`
+      });
+    } catch (error) {
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
   // Stats routes
   app.get('/api/stats', authenticateToken, async (req, res) => {
     try {

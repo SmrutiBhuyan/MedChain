@@ -22,6 +22,11 @@ import ReportDrug from "@/pages/report-drug";
 import Login from "@/pages/login";
 import Register from "@/pages/register";
 import Assistant from "@/pages/assistant";
+import BlockchainTracker from "@/pages/blockchain-tracker";
+import IoTMonitoring from "@/pages/iot-monitoring";
+import AIForecasting from "@/pages/ai-forecasting";
+import IVRSystem from "@/pages/ivr-system";
+import IncentiveSystem from "@/pages/incentive-system";
 
 function Router() {
   return (
@@ -41,6 +46,11 @@ function Router() {
       <Route path="/login" component={Login} />
       <Route path="/register" component={Register} />
       <Route path="/assistant" component={Assistant} />
+      <Route path="/blockchain-tracker" component={BlockchainTracker} />
+      <Route path="/iot-monitoring" component={IoTMonitoring} />
+      <Route path="/ai-forecasting" component={AIForecasting} />
+      <Route path="/ivr-system" component={IVRSystem} />
+      <Route path="/incentive-system" component={IncentiveSystem} />
       <Route component={NotFound} />
     </Switch>
   );

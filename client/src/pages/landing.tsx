@@ -68,35 +68,71 @@ export default function Landing() {
             <Card className="bg-gray-50 border-0">
               <CardContent className="p-6">
                 <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center mb-4">
-                  <QrCode className="h-6 w-6 text-white" />
+                  <Shield className="h-6 w-6 text-white" />
                 </div>
-                <h3 className="text-xl font-semibold mb-2">QR Code Verification</h3>
+                <h3 className="text-xl font-semibold mb-2">Drug Verification</h3>
                 <p className="text-gray-600">
-                  Instantly verify drug authenticity by scanning QR codes or entering batch numbers.
+                  Instantly verify drug authenticity with QR codes, batch numbers, and blockchain logging.
                 </p>
               </CardContent>
             </Card>
             
             <Card className="bg-gray-50 border-0">
               <CardContent className="p-6">
-                <div className="w-12 h-12 bg-secondary rounded-lg flex items-center justify-center mb-4">
+                <div className="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center mb-4">
                   <MapPin className="h-6 w-6 text-white" />
                 </div>
-                <h3 className="text-xl font-semibold mb-2">Emergency Stock Locator</h3>
+                <h3 className="text-xl font-semibold mb-2">Smart Emergency Locator</h3>
                 <p className="text-gray-600">
-                  Find essential medicines in real-time across nearby pharmacies and medical facilities.
+                  AI-powered Ant Colony Optimization algorithm finds the best pharmacy recommendations.
                 </p>
               </CardContent>
             </Card>
             
+            <Card className="bg-gray-50 border-0">
+              <CardContent className="p-6">
+                <div className="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center mb-4">
+                  <QrCode className="h-6 w-6 text-white" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">Blockchain Traceability</h3>
+                <p className="text-gray-600">
+                  Complete end-to-end drug tracking with immutable blockchain records and NFT assignment.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-gray-50 border-0">
+              <CardContent className="p-6">
+                <div className="w-12 h-12 bg-orange-500 rounded-lg flex items-center justify-center mb-4">
+                  <Search className="h-6 w-6 text-white" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">IoT Environmental Monitoring</h3>
+                <p className="text-gray-600">
+                  Real-time temperature, humidity, and storage condition monitoring with smart sensors.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-gray-50 border-0">
+              <CardContent className="p-6">
+                <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center mb-4">
+                  <Search className="h-6 w-6 text-white" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">AI Demand Forecasting</h3>
+                <p className="text-gray-600">
+                  Machine learning-powered demand prediction to prevent shortages and optimize inventory.
+                </p>
+              </CardContent>
+            </Card>
+
             <Card className="bg-gray-50 border-0">
               <CardContent className="p-6">
                 <div className="w-12 h-12 bg-red-500 rounded-lg flex items-center justify-center mb-4">
-                  <Shield className="h-6 w-6 text-white" />
+                  <Search className="h-6 w-6 text-white" />
                 </div>
-                <h3 className="text-xl font-semibold mb-2">Counterfeit Protection</h3>
+                <h3 className="text-xl font-semibold mb-2">Voice-Based IVR System</h3>
                 <p className="text-gray-600">
-                  Advanced blockchain-based tracking to prevent counterfeit drugs from entering the supply chain.
+                  Multilingual voice verification system for offline access and rural connectivity.
                 </p>
               </CardContent>
             </Card>

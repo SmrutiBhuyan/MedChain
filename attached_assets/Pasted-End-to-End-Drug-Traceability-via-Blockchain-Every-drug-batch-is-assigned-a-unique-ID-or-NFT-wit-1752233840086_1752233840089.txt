@@ -1,0 +1,46 @@
+End-to-End Drug Traceability via Blockchain – Every drug batch is assigned a unique ID (or NFT), with metadata securely stored and immutably logged across its lifecycle on a permissioned blockchain like Polygon or Hyperledger, ensuring traceability from manufacturer to patient.
+
+Real-Time Inventory Monitoring with IoT – Smart sensors and handheld scanners track drug quantity, expiry, and storage conditions (e.g., temperature) in real time, updating a central platform for live visibility—even in remote areas.
+
+AI-Powered Smart Demand Forecasting – Machine learning analyzes disease patterns, consumption trends, and seasonality to predict future stock needs, minimizing overstocking or shortages at every facility.
+
+ACO-Based Emergency Drug Locator – Uses the Ant Colony Optimization algorithm to help users find the best-suited pharmacy for a specific medicine based on stock levels, freshness, and distance.
+
+Decentralized Autonomous Distribution (DAD) – Blockchain smart contracts autonomously detect supply imbalances and redistribute surplus drugs from one region to another when AI forecasts a stockout, logging transfers on-chain with verified data.
+
+Real-Time Counterfeit Detection with AI & Computer Vision – Uses image recognition and metadata scanning to detect fake drugs instantly at checkpoints or via pharmacy uploads.
+
+Drug Authentication for Patients & Pharmacies – Anyone can verify the authenticity of a drug via batch number or QR code, ensuring safety before use or distribution.
+
+IVR-Based Drug Verification (No Internet Needed) – A multilingual, voice-based system lets users:
+
+Verify drugs via toll-free number by speaking or entering batch number
+
+Request real-time drug availability by voice (e.g., "Insulin in Mumbai")
+
+Report fake drugs with GPS and voice input
+
+Receive SMS/voice alerts and even callback updates after missed calls
+
+Incentive System & Compliance Framework – Pharmacies and users earn rewards (e.g., UPI cashback) for reporting fakes or consistently scanning drugs, promoting nationwide compliance and safety culture.
+
+Unified Dashboard & API Gateway – A single web interface for all stakeholders (regulators, pharmacies, hospitals) showing:
+
+Live stock status
+
+Counterfeit incidents
+
+Demand forecasts
+
+API integrations with external health platforms
+
+Pharmacy Inventory Dashboard – Pharmacies manage their live stock levels, receive alerts for expiring/low drugs, and get redistribution instructions from the smart contract layer.
+
+Patient & Doctor Portal – Allows public and medical professionals to verify drug details, check availability, access reports, and stay informed about alerts (e.g., recalls, shortages).
+
+Admin Dashboard – Superusers manage users, drugs, pharmacies, and monitor global system metrics including ACO decisions, AI predictions, and blockchain transactions.
+
+Automated Drug Logging via QR Scans – Each drug scan (during movement or by users) is recorded into the blockchain, creating a tamper-proof movement trail.
+
+Voice-Based Fake Drug Reporting with UPI Incentives – Users can report suspicious drugs by voice, optionally include GPS, and qualify for monetary rewards for valid reports.
+
