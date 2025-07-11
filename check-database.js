@@ -5,9 +5,13 @@
  * Run this script to verify database integrity and view data
  */
 
-const Database = require('better-sqlite3');
-const fs = require('fs');
-const path = require('path');
+import Database from 'better-sqlite3';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Colors for console output
 const colors = {
@@ -103,7 +107,7 @@ function checkDatabaseStatus() {
     // Drugs
     if (tableStats.drugs > 0) {
       log('\n💊 Drugs:', 'cyan');
-      const drugs = db.prepare(`SELECT id, name, manufacturer, batchNumber FROM drugs LIMIT 3`).all();
+      const drugs = db.prepare(`SELECT id, name, manufacturer, batch_number as batchNumber FROM drugs LIMIT 3`).all();
       drugs.forEach(drug => {
         log(`  • ${drug.name} by ${drug.manufacturer} (Batch: ${drug.batchNumber})`, 'white');
       });
@@ -122,10 +126,10 @@ function checkDatabaseStatus() {
     if (tableStats.inventory > 0) {
       log('\n📦 Inventory:', 'cyan');
       const inventory = db.prepare(`
-        SELECT i.quantity, i.lastUpdated, d.name as drugName, p.name as pharmacyName
+        SELECT i.quantity, i.last_updated as lastUpdated, d.name as drugName, p.name as pharmacyName
         FROM inventory i
-        JOIN drugs d ON i.drugId = d.id
-        JOIN pharmacies p ON i.pharmacyId = p.id
+        JOIN drugs d ON i.drug_id = d.id
+        JOIN pharmacies p ON i.pharmacy_id = p.id
         LIMIT 3
       `).all();
       inventory.forEach(item => {
@@ -137,9 +141,9 @@ function checkDatabaseStatus() {
     if (tableStats.verifications > 0) {
       log('\n🔍 Verifications:', 'cyan');
       const verifications = db.prepare(`
-        SELECT v.result, v.timestamp, d.name as drugName, d.batchNumber
+        SELECT v.result, v.timestamp, d.name as drugName, d.batch_number as batchNumber
         FROM verifications v
-        JOIN drugs d ON v.drugId = d.id
+        JOIN drugs d ON v.drug_id = d.id
         ORDER BY v.timestamp DESC
         LIMIT 3
       `).all();
