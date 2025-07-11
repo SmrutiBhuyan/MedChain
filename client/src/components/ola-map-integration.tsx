@@ -42,7 +42,10 @@ const OlaMapIntegration: React.FC<OlaMapIntegrationProps> = ({
     if (storedApiKey) {
       setApiKey(storedApiKey);
     } else {
-      setShowApiKeyInput(true);
+      // Use the provided API key as default
+      const defaultApiKey = 'SuoxlmXRea98IUzTc8v4sW0cPphMARvFq43BiRQf';
+      setApiKey(defaultApiKey);
+      localStorage.setItem('ola_maps_api_key', defaultApiKey);
     }
   }, []);
 
