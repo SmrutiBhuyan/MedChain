@@ -14,7 +14,7 @@ export default function PharmacyDashboard() {
   const { user, isAuthenticated } = useAuth();
   const [, setLocation] = useLocation();
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
 
   if (!isAuthenticated || user?.role !== "pharmacy") {
     setLocation("/pharmacy-login");
@@ -56,7 +56,7 @@ export default function PharmacyDashboard() {
 
   const filteredInventory = inventory?.filter((item: any) => {
     const matchesSearch = item.drug.name.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = !selectedCategory || item.drug.category === selectedCategory;
+    const matchesCategory = selectedCategory === "all" || item.drug.category === selectedCategory;
     return matchesSearch && matchesCategory;
   }) || [];
 
@@ -192,7 +192,7 @@ export default function PharmacyDashboard() {
                   <SelectValue placeholder="All Categories" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Categories</SelectItem>
+                  <SelectItem value="all">All Categories</SelectItem>
                   <SelectItem value="pain-relief">Pain Relief</SelectItem>
                   <SelectItem value="antibiotics">Antibiotics</SelectItem>
                   <SelectItem value="vitamins">Vitamins</SelectItem>
