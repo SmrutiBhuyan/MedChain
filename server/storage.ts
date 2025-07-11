@@ -263,6 +263,11 @@ export class MemStorage implements IStorage {
       ...insertDrug,
       id: this.currentIds.drugs++,
       createdAt: new Date(),
+      description: insertDrug.description ?? null,
+      category: insertDrug.category ?? null,
+      strength: insertDrug.strength ?? null,
+      qrCodeUrl: insertDrug.qrCodeUrl ?? null,
+      isCounterfeit: insertDrug.isCounterfeit ?? false,
     };
     this.drugs.set(drug.id, drug);
     return drug;
@@ -301,6 +306,9 @@ export class MemStorage implements IStorage {
       ...insertPharmacy,
       id: this.currentIds.pharmacies++,
       createdAt: new Date(),
+      lat: insertPharmacy.lat ?? null,
+      lng: insertPharmacy.lng ?? null,
+      userId: insertPharmacy.userId ?? null,
     };
     this.pharmacies.set(pharmacy.id, pharmacy);
     return pharmacy;
@@ -398,6 +406,8 @@ export class MemStorage implements IStorage {
       ...insertVerification,
       id: this.currentIds.verifications++,
       timestamp: new Date(),
+      userId: insertVerification.userId ?? null,
+      location: insertVerification.location ?? null,
     };
     this.verifications.set(verification.id, verification);
     return verification;

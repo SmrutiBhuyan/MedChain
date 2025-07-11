@@ -8,35 +8,89 @@ import { MapPin, List, Search, Navigation } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 
-interface InventoryItem {
+interface ACOPharmacy {
   id: number;
+  name: string;
+  address: string;
+  city: string;
+  lat: string | null;
+  lng: string | null;
   quantity: number;
-  drug: {
+  lastUpdated: Date;
+  contact: string;
+  drugInfo: {
     name: string;
     batchNumber: string;
     manufacturer: string;
     expiryDate: string;
   };
-  pharmacy: {
-    name: string;
-    address: string;
-    contact: string;
+  acoScore: number;
+  pheromoneLevel: number;
+  heuristicValue: number;
+  explanation: string;
+  distance?: number;
+}
+
+interface ACOResponse {
+  algorithm: string;
+  totalFound: number;
+  searchCriteria: {
+    drugName: string;
     city: string;
-    lat: string;
-    lng: string;
+    userLocation: {
+      lat?: number;
+      lng?: number;
+    };
   };
+  pharmacies: ACOPharmacy[];
 }
 
 export default function EmergencyLocator() {
   const [drugName, setDrugName] = useState("");
   const [city, setCity] = useState("");
   const [searchPerformed, setSearchPerformed] = useState(false);
+  const [userLocation, setUserLocation] = useState<{lat: number; lng: number} | null>(null);
   const { toast } = useToast();
 
-  const { data: inventory, isLoading, error } = useQuery({
-    queryKey: ["/api/inventory/search", drugName, city],
-    queryFn: async () => {
-      const response = await fetch(`/api/inventory/search?drugName=${encodeURIComponent(drugName)}&city=${encodeURIComponent(city)}`);
+  // Get user's location
+  const getUserLocation = () => {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setUserLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          });
+          toast({
+            title: "Location Access Granted",
+            description: "We'll show you the nearest pharmacies first",
+          });
+        },
+        (error) => {
+          console.error("Error getting location:", error);
+          toast({
+            title: "Location Access Denied",
+            description: "Search results won't include distance optimization",
+            variant: "destructive",
+          });
+        }
+      );
+    }
+  };
+
+  const { data: acoResponse, isLoading, error } = useQuery({
+    queryKey: ["/api/emergency-locator", drugName, city, userLocation?.lat, userLocation?.lng],
+    queryFn: async (): Promise<ACOResponse> => {
+      const params = new URLSearchParams({
+        drugName,
+        city,
+        ...(userLocation && { 
+          lat: userLocation.lat.toString(), 
+          lng: userLocation.lng.toString() 
+        })
+      });
+      
+      const response = await fetch(`/api/emergency-locator?${params}`);
       if (!response.ok) {
         throw new Error("Failed to search inventory");
       }
@@ -64,9 +118,15 @@ export default function EmergencyLocator() {
     return { label: "In Stock", color: "bg-green-500" };
   };
 
-  const calculateDistance = (lat1: string, lng1: string) => {
-    // Mock distance calculation - in a real app, you'd use actual geolocation
-    return (Math.random() * 10 + 0.5).toFixed(1);
+  const formatACOScore = (score: number) => {
+    return (score * 100).toFixed(0);
+  };
+
+  const getACOBadgeColor = (score: number) => {
+    if (score >= 0.8) return "bg-green-500";
+    if (score >= 0.6) return "bg-blue-500";
+    if (score >= 0.4) return "bg-yellow-500";
+    return "bg-gray-500";
   };
 
   return (
@@ -158,46 +218,88 @@ export default function EmergencyLocator() {
               </div>
             )}
 
+            {!userLocation && !isLoading && (
+              <div className="mb-4 p-4 bg-blue-50 rounded-lg">
+                <p className="text-sm text-blue-800 mb-2">
+                  Enable location access for better results with distance-based ranking
+                </p>
+                <Button onClick={getUserLocation} size="sm" variant="outline" className="border-blue-500 text-blue-600">
+                  <Navigation className="mr-1 h-3 w-3" />
+                  Enable Location
+                </Button>
+              </div>
+            )}
+
             {searchPerformed && !isLoading && !error && (
               <div className="space-y-4">
-                {inventory && inventory.length > 0 ? (
-                  inventory.map((item: InventoryItem) => {
-                    const stockStatus = getStockStatus(item.quantity);
-                    const distance = calculateDistance(item.pharmacy.lat, item.pharmacy.lng);
-                    
-                    return (
-                      <div key={item.id} className="border border-gray-200 rounded-lg p-4">
-                        <div className="flex justify-between items-start mb-2">
-                          <h3 className="font-semibold text-gray-900">
-                            {item.pharmacy.name}
-                          </h3>
-                          <Badge className={`text-white ${stockStatus.color}`}>
-                            {stockStatus.label}
-                          </Badge>
-                        </div>
-                        <p className="text-sm text-gray-600 mb-2">
-                          {item.pharmacy.address}
-                        </p>
-                        <div className="flex justify-between items-center">
-                          <div className="text-sm">
-                            <span className="font-medium">Stock:</span> {item.quantity} units
-                            <span className="ml-4 font-medium">Distance:</span> {distance} km
+                {acoResponse && acoResponse.pharmacies.length > 0 ? (
+                  <>
+                    <div className="mb-4 p-3 bg-green-50 rounded-lg">
+                      <p className="text-sm font-medium text-green-800">
+                        Found {acoResponse.totalFound} pharmacies using {acoResponse.algorithm}
+                      </p>
+                      <p className="text-xs text-green-600 mt-1">
+                        Results are optimized based on stock availability, distance, and data freshness
+                      </p>
+                    </div>
+                    {acoResponse.pharmacies.map((pharmacy: ACOPharmacy, index: number) => {
+                      const stockStatus = getStockStatus(pharmacy.quantity);
+                      
+                      return (
+                        <div key={pharmacy.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                          <div className="flex justify-between items-start mb-2">
+                            <div className="flex items-center">
+                              <span className="bg-primary text-white text-xs px-2 py-1 rounded-full mr-2">
+                                #{index + 1}
+                              </span>
+                              <h3 className="font-semibold text-gray-900">
+                                {pharmacy.name}
+                              </h3>
+                            </div>
+                            <div className="flex space-x-2">
+                              <Badge className={`text-white ${getACOBadgeColor(pharmacy.acoScore)}`}>
+                                Score: {formatACOScore(pharmacy.acoScore)}
+                              </Badge>
+                              <Badge className={`text-white ${stockStatus.color}`}>
+                                {stockStatus.label}
+                              </Badge>
+                            </div>
                           </div>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="text-primary hover:text-blue-700"
-                          >
-                            <Navigation className="mr-1 h-3 w-3" />
-                            Get Directions
-                          </Button>
+                          <p className="text-sm text-gray-600 mb-2">
+                            {pharmacy.address}
+                          </p>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm mb-3">
+                            <div>
+                              <span className="font-medium">Stock:</span> {pharmacy.quantity} units
+                            </div>
+                            <div>
+                              <span className="font-medium">Contact:</span> {pharmacy.contact}
+                            </div>
+                            {pharmacy.distance && (
+                              <div>
+                                <span className="font-medium">Distance:</span> {pharmacy.distance.toFixed(1)} km
+                              </div>
+                            )}
+                            <div>
+                              <span className="font-medium">Manufacturer:</span> {pharmacy.drugInfo.manufacturer}
+                            </div>
+                          </div>
+                          <div className="text-xs text-gray-500 mb-2">
+                            <span className="font-medium">AI Reasoning:</span> {pharmacy.explanation}
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <div className="text-xs text-gray-500">
+                              Updated: {new Date(pharmacy.lastUpdated).toLocaleString()}
+                            </div>
+                            <Button variant="outline" size="sm" className="text-primary border-primary hover:bg-primary hover:text-white">
+                              <Navigation className="mr-1 h-3 w-3" />
+                              Get Directions
+                            </Button>
+                          </div>
                         </div>
-                        <div className="mt-2 text-xs text-gray-500">
-                          <span className="font-medium">Contact:</span> {item.pharmacy.contact}
-                        </div>
-                      </div>
-                    );
-                  })
+                      );
+                    })}
+                  </>
                 ) : (
                   <div className="text-center py-8">
                     <p className="text-gray-600">

@@ -5,6 +5,8 @@ import { loginSchema, insertUserSchema, insertDrugSchema, insertPharmacySchema, 
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
+import { rankPharmaciesWithACO, findBestPharmacies } from "./utils/acoRank";
+import QRCode from "qrcode";
 
 const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key";
 
@@ -148,9 +150,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/drugs', authenticateToken, requireAdmin, async (req, res) => {
     try {
       const drugData = insertDrugSchema.parse(req.body);
-      const drug = await storage.createDrug(drugData);
+      
+      // Generate QR code for the drug
+      const qrData = JSON.stringify({
+        batchNumber: drugData.batchNumber,
+        name: drugData.name,
+        manufacturer: drugData.manufacturer,
+        expiryDate: drugData.expiryDate,
+        verificationUrl: `${process.env.BASE_URL || 'http://localhost:5000'}/verify-drug?batch=${drugData.batchNumber}`
+      });
+      
+      const qrCodeUrl = await QRCode.toDataURL(qrData);
+      
+      const drug = await storage.createDrug({
+        ...drugData,
+        qrCodeUrl
+      });
+      
       res.status(201).json(drug);
     } catch (error) {
+      console.error('Error creating drug:', error);
       res.status(400).json({ message: 'Invalid request data' });
     }
   });
@@ -223,6 +242,55 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Enhanced Emergency Drug Locator with ACO Algorithm
+  app.get('/api/emergency-locator', async (req, res) => {
+    try {
+      const { drugName, city, lat, lng } = req.query;
+      if (!drugName || !city) {
+        return res.status(400).json({ message: 'drugName and city are required' });
+      }
+      
+      // Get basic inventory data
+      const inventory = await storage.searchInventory(drugName as string, city as string);
+      
+      // Transform data for ACO algorithm
+      const pharmacyOptions = inventory.map(item => ({
+        id: item.pharmacy.id,
+        name: item.pharmacy.name,
+        address: item.pharmacy.address,
+        city: item.pharmacy.city,
+        lat: item.pharmacy.lat,
+        lng: item.pharmacy.lng,
+        quantity: item.quantity,
+        lastUpdated: item.lastUpdated,
+        contact: item.pharmacy.contact,
+        drugInfo: {
+          name: item.drug.name,
+          batchNumber: item.drug.batchNumber,
+          manufacturer: item.drug.manufacturer,
+          expiryDate: item.drug.expiryDate,
+        }
+      }));
+      
+      // Use ACO algorithm to rank pharmacies
+      const userLat = lat ? parseFloat(lat as string) : undefined;
+      const userLng = lng ? parseFloat(lng as string) : undefined;
+      
+      const rankedPharmacies = findBestPharmacies(pharmacyOptions, userLat, userLng, 10);
+      
+      res.json({
+        algorithm: 'Ant Colony Optimization',
+        totalFound: rankedPharmacies.length,
+        searchCriteria: { drugName, city, userLocation: { lat: userLat, lng: userLng } },
+        pharmacies: rankedPharmacies
+      });
+    } catch (error) {
+      console.error('Emergency locator error:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
+  // Legacy search endpoint for backward compatibility
   app.get('/api/inventory/search', async (req, res) => {
     try {
       const { drugName, city } = req.query;
@@ -311,6 +379,132 @@ export async function registerRoutes(app: Express): Promise<Server> {
           timestamp: verification.timestamp,
           blockchainTx: `0x${Math.random().toString(16).substr(2, 8)}...${Math.random().toString(16).substr(2, 4)}`,
         },
+      });
+    } catch (error) {
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
+  // Contact and Report routes
+  app.post('/api/contact', async (req, res) => {
+    try {
+      const contactSchema = z.object({
+        name: z.string().min(1, "Name is required"),
+        email: z.string().email("Valid email is required"),
+        subject: z.string().min(1, "Subject is required"),
+        message: z.string().min(10, "Message must be at least 10 characters"),
+      });
+      
+      const contactData = contactSchema.parse(req.body);
+      
+      // In a real application, this would send an email or store in database
+      console.log('Contact form submission:', contactData);
+      
+      res.json({ 
+        message: 'Thank you for your message. We will get back to you soon!',
+        timestamp: new Date().toISOString()
+      });
+    } catch (error) {
+      res.status(400).json({ message: 'Invalid contact form data' });
+    }
+  });
+
+  app.post('/api/report-drug', async (req, res) => {
+    try {
+      const reportSchema = z.object({
+        batchNumber: z.string().min(1, "Batch number is required"),
+        reason: z.string().min(1, "Reason is required"),
+        reporterName: z.string().min(1, "Reporter name is required"),
+        reporterEmail: z.string().email("Valid email is required"),
+        description: z.string().min(10, "Description must be at least 10 characters"),
+        location: z.string().optional(),
+      });
+      
+      const reportData = reportSchema.parse(req.body);
+      
+      // Check if drug exists
+      const drug = await storage.getDrugByBatchNumber(reportData.batchNumber);
+      if (!drug) {
+        return res.status(404).json({ message: 'Drug with this batch number not found' });
+      }
+      
+      // Create a verification record for the report
+      const verification = await storage.createVerification({
+        drugId: drug.id,
+        userId: null,
+        location: reportData.location || 'Reported',
+        result: 'reported_suspicious',
+      });
+      
+      // In a real application, this would alert administrators
+      console.log('Drug report submission:', reportData);
+      
+      res.json({ 
+        message: 'Thank you for reporting suspicious drug activity. We will investigate this immediately.',
+        reportId: verification.id,
+        timestamp: new Date().toISOString()
+      });
+    } catch (error) {
+      console.error('Report error:', error);
+      res.status(400).json({ message: 'Invalid report data' });
+    }
+  });
+
+  // Generate QR code for existing drugs
+  app.post('/api/drugs/:id/generate-qr', authenticateToken, requireAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const drug = await storage.getDrug(id);
+      
+      if (!drug) {
+        return res.status(404).json({ message: 'Drug not found' });
+      }
+      
+      const qrData = JSON.stringify({
+        batchNumber: drug.batchNumber,
+        name: drug.name,
+        manufacturer: drug.manufacturer,
+        expiryDate: drug.expiryDate,
+        verificationUrl: `${process.env.BASE_URL || 'http://localhost:5000'}/verify-drug?batch=${drug.batchNumber}`
+      });
+      
+      const qrCodeUrl = await QRCode.toDataURL(qrData);
+      
+      const updatedDrug = await storage.updateDrug(id, { qrCodeUrl });
+      
+      res.json({ 
+        message: 'QR code generated successfully',
+        qrCodeUrl,
+        drug: updatedDrug
+      });
+    } catch (error) {
+      console.error('QR generation error:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
+  // Get low stock alerts for pharmacies
+  app.get('/api/inventory/alerts/:pharmacyId', authenticateToken, async (req, res) => {
+    try {
+      const pharmacyId = parseInt(req.params.pharmacyId);
+      const inventory = await storage.getInventory(pharmacyId);
+      
+      // Filter low stock items (less than 10 units)
+      const lowStockItems = inventory.filter(item => item.quantity < 10);
+      
+      // Filter expiring items (expiring in next 30 days)
+      const thirtyDaysFromNow = new Date();
+      thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
+      
+      const expiringItems = inventory.filter(item => {
+        const expiryDate = new Date(item.drug.expiryDate);
+        return expiryDate <= thirtyDaysFromNow;
+      });
+      
+      res.json({
+        lowStock: lowStockItems,
+        expiring: expiringItems,
+        alertCount: lowStockItems.length + expiringItems.length
       });
     } catch (error) {
       res.status(500).json({ message: 'Internal server error' });

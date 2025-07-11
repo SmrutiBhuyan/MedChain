@@ -18,6 +18,7 @@ import AdminDashboard from "@/pages/admin-dashboard";
 import AddDrug from "@/pages/add-drug";
 import DrugDetails from "@/pages/drug-details";
 import Support from "@/pages/support";
+import ReportDrug from "@/pages/report-drug";
 import Login from "@/pages/login";
 import Register from "@/pages/register";
 import Assistant from "@/pages/assistant";
@@ -36,6 +37,7 @@ function Router() {
       <Route path="/admin/add-drug" component={AddDrug} />
       <Route path="/drug/:batchNumber" component={DrugDetails} />
       <Route path="/support" component={Support} />
+      <Route path="/report-drug" component={ReportDrug} />
       <Route path="/login" component={Login} />
       <Route path="/register" component={Register} />
       <Route path="/assistant" component={Assistant} />
