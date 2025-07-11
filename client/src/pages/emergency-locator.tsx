@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { MapPin, List, Search, Navigation } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
+import OlaMapIntegration from "@/components/ola-map-integration";
 
 interface ACOPharmacy {
   id: number;
@@ -136,7 +137,7 @@ export default function EmergencyLocator() {
           Emergency Stock Locator
         </h1>
         <p className="text-xl text-gray-600">
-          Find essential medicines in real-time across nearby pharmacies and medical facilities.
+          Find life-saving emergency medicines in real-time across nearby pharmacies and medical facilities.
         </p>
       </div>
 
@@ -149,7 +150,7 @@ export default function EmergencyLocator() {
               <Input
                 id="drugName"
                 type="text"
-                placeholder="e.g., Paracetamol"
+                placeholder="e.g., Epinephrine, Naloxone, Atropine"
                 value={drugName}
                 onChange={(e) => setDrugName(e.target.value)}
                 className="mt-1"
@@ -182,17 +183,31 @@ export default function EmergencyLocator() {
           <CardHeader>
             <CardTitle className="flex items-center">
               <MapPin className="mr-2 h-5 w-5 text-primary" />
-              Map View
+              Interactive Map
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="bg-gray-100 rounded-lg h-96 flex items-center justify-center">
-              <div className="text-center">
-                <MapPin className="h-16 w-16 mx-auto mb-4 text-gray-400" />
-                <p className="text-gray-600">Interactive map showing pharmacy locations</p>
-                <p className="text-sm text-gray-500 mt-2">Map integration: Google Maps API</p>
-              </div>
-            </div>
+            <OlaMapIntegration
+              pharmacies={acoResponse?.pharmacies?.map(pharmacy => ({
+                id: pharmacy.id,
+                name: pharmacy.name,
+                address: pharmacy.address,
+                city: pharmacy.city,
+                lat: pharmacy.lat ? parseFloat(pharmacy.lat) : 0,
+                lng: pharmacy.lng ? parseFloat(pharmacy.lng) : 0,
+                contact: pharmacy.contact,
+                quantity: pharmacy.quantity,
+                drugName: pharmacy.drugInfo.name
+              })) || []}
+              searchQuery={searchPerformed ? `${drugName} in ${city}` : ''}
+              drugName={drugName}
+              onPharmacySelect={(pharmacy) => {
+                toast({
+                  title: "Pharmacy Selected",
+                  description: `${pharmacy.name} - ${pharmacy.quantity} units available`,
+                });
+              }}
+            />
           </CardContent>
         </Card>
 

@@ -542,8 +542,8 @@ export class DatabaseStorage implements IStorage {
       .leftJoin(drugs, eq(inventory.drugId, drugs.id))
       .leftJoin(pharmacies, eq(inventory.pharmacyId, pharmacies.id))
       .where(and(
-        ilike(drugs.name, `%${drugName}%`),
-        eq(pharmacies.city, city)
+        like(drugs.name, `%${drugName}%`),
+        like(pharmacies.city, `%${city}%`)
       ))
       .then(rows => rows.map(row => ({
         ...row.inventory,
