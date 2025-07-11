@@ -3,6 +3,8 @@ import {
   type User, type Drug, type Pharmacy, type Inventory, type Verification,
   type InsertUser, type InsertDrug, type InsertPharmacy, type InsertInventory, type InsertVerification 
 } from "@shared/schema";
+import { db } from "./db";
+import { eq, and, like, ilike } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 
 export interface IStorage {
@@ -414,4 +416,183 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+export class DatabaseStorage implements IStorage {
+  async getUser(id: number): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user || undefined;
+  }
+
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.email, email));
+    return user || undefined;
+  }
+
+  async createUser(insertUser: InsertUser): Promise<User> {
+    const [user] = await db
+      .insert(users)
+      .values(insertUser)
+      .returning();
+    return user;
+  }
+
+  async getDrug(id: number): Promise<Drug | undefined> {
+    const [drug] = await db.select().from(drugs).where(eq(drugs.id, id));
+    return drug || undefined;
+  }
+
+  async getDrugByBatchNumber(batchNumber: string): Promise<Drug | undefined> {
+    const [drug] = await db.select().from(drugs).where(eq(drugs.batchNumber, batchNumber));
+    return drug || undefined;
+  }
+
+  async getAllDrugs(): Promise<Drug[]> {
+    return await db.select().from(drugs);
+  }
+
+  async createDrug(insertDrug: InsertDrug): Promise<Drug> {
+    const [drug] = await db
+      .insert(drugs)
+      .values(insertDrug)
+      .returning();
+    return drug;
+  }
+
+  async updateDrug(id: number, drugUpdate: Partial<InsertDrug>): Promise<Drug | undefined> {
+    const [drug] = await db
+      .update(drugs)
+      .set(drugUpdate)
+      .where(eq(drugs.id, id))
+      .returning();
+    return drug || undefined;
+  }
+
+  async deleteDrug(id: number): Promise<boolean> {
+    const result = await db.delete(drugs).where(eq(drugs.id, id));
+    return result.rowCount > 0;
+  }
+
+  async getPharmacy(id: number): Promise<Pharmacy | undefined> {
+    const [pharmacy] = await db.select().from(pharmacies).where(eq(pharmacies.id, id));
+    return pharmacy || undefined;
+  }
+
+  async getAllPharmacies(): Promise<Pharmacy[]> {
+    return await db.select().from(pharmacies);
+  }
+
+  async getPharmaciesByCity(city: string): Promise<Pharmacy[]> {
+    return await db.select().from(pharmacies).where(eq(pharmacies.city, city));
+  }
+
+  async createPharmacy(insertPharmacy: InsertPharmacy): Promise<Pharmacy> {
+    const [pharmacy] = await db
+      .insert(pharmacies)
+      .values(insertPharmacy)
+      .returning();
+    return pharmacy;
+  }
+
+  async updatePharmacy(id: number, pharmacyUpdate: Partial<InsertPharmacy>): Promise<Pharmacy | undefined> {
+    const [pharmacy] = await db
+      .update(pharmacies)
+      .set(pharmacyUpdate)
+      .where(eq(pharmacies.id, id))
+      .returning();
+    return pharmacy || undefined;
+  }
+
+  async getInventory(pharmacyId: number): Promise<(Inventory & { drug: Drug; pharmacy: Pharmacy })[]> {
+    return await db
+      .select()
+      .from(inventory)
+      .leftJoin(drugs, eq(inventory.drugId, drugs.id))
+      .leftJoin(pharmacies, eq(inventory.pharmacyId, pharmacies.id))
+      .where(eq(inventory.pharmacyId, pharmacyId))
+      .then(rows => rows.map(row => ({
+        ...row.inventory,
+        drug: row.drugs!,
+        pharmacy: row.pharmacies!,
+      })));
+  }
+
+  async getInventoryByDrug(drugId: number): Promise<(Inventory & { drug: Drug; pharmacy: Pharmacy })[]> {
+    return await db
+      .select()
+      .from(inventory)
+      .leftJoin(drugs, eq(inventory.drugId, drugs.id))
+      .leftJoin(pharmacies, eq(inventory.pharmacyId, pharmacies.id))
+      .where(eq(inventory.drugId, drugId))
+      .then(rows => rows.map(row => ({
+        ...row.inventory,
+        drug: row.drugs!,
+        pharmacy: row.pharmacies!,
+      })));
+  }
+
+  async searchInventory(drugName: string, city: string): Promise<(Inventory & { drug: Drug; pharmacy: Pharmacy })[]> {
+    return await db
+      .select()
+      .from(inventory)
+      .leftJoin(drugs, eq(inventory.drugId, drugs.id))
+      .leftJoin(pharmacies, eq(inventory.pharmacyId, pharmacies.id))
+      .where(and(
+        ilike(drugs.name, `%${drugName}%`),
+        eq(pharmacies.city, city)
+      ))
+      .then(rows => rows.map(row => ({
+        ...row.inventory,
+        drug: row.drugs!,
+        pharmacy: row.pharmacies!,
+      })));
+  }
+
+  async createInventory(insertInventory: InsertInventory): Promise<Inventory> {
+    const [inventoryItem] = await db
+      .insert(inventory)
+      .values(insertInventory)
+      .returning();
+    return inventoryItem;
+  }
+
+  async updateInventory(id: number, inventoryUpdate: Partial<InsertInventory>): Promise<Inventory | undefined> {
+    const [inventoryItem] = await db
+      .update(inventory)
+      .set(inventoryUpdate)
+      .where(eq(inventory.id, id))
+      .returning();
+    return inventoryItem || undefined;
+  }
+
+  async deleteInventory(id: number): Promise<boolean> {
+    const result = await db.delete(inventory).where(eq(inventory.id, id));
+    return result.rowCount > 0;
+  }
+
+  async getVerification(id: number): Promise<Verification | undefined> {
+    const [verification] = await db.select().from(verifications).where(eq(verifications.id, id));
+    return verification || undefined;
+  }
+
+  async getAllVerifications(): Promise<(Verification & { drug: Drug; user?: User })[]> {
+    return await db
+      .select()
+      .from(verifications)
+      .leftJoin(drugs, eq(verifications.drugId, drugs.id))
+      .leftJoin(users, eq(verifications.userId, users.id))
+      .then(rows => rows.map(row => ({
+        ...row.verifications,
+        drug: row.drugs!,
+        user: row.users || undefined,
+      })));
+  }
+
+  async createVerification(insertVerification: InsertVerification): Promise<Verification> {
+    const [verification] = await db
+      .insert(verifications)
+      .values(insertVerification)
+      .returning();
+    return verification;
+  }
+}
+
+export const storage = new DatabaseStorage();

@@ -1,4 +1,5 @@
 import { pgTable, text, serial, integer, boolean, timestamp, decimal } from "drizzle-orm/pg-core";
+import { relations } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -87,6 +88,56 @@ export const loginSchema = z.object({
 });
 
 // Types
+export type User = typeof users.$inferSelect;
+export type Drug = typeof drugs.$inferSelect;
+export type Pharmacy = typeof pharmacies.$inferSelect;
+export type Inventory = typeof inventory.$inferSelect;
+export type Verification = typeof verifications.$inferSelect;
+
+// Relations
+export const usersRelations = relations(users, ({ one, many }) => ({
+  pharmacy: one(pharmacies, {
+    fields: [users.id],
+    references: [pharmacies.userId],
+  }),
+  verifications: many(verifications),
+}));
+
+export const drugsRelations = relations(drugs, ({ many }) => ({
+  inventory: many(inventory),
+  verifications: many(verifications),
+}));
+
+export const pharmaciesRelations = relations(pharmacies, ({ one, many }) => ({
+  user: one(users, {
+    fields: [pharmacies.userId],
+    references: [users.id],
+  }),
+  inventory: many(inventory),
+}));
+
+export const inventoryRelations = relations(inventory, ({ one }) => ({
+  pharmacy: one(pharmacies, {
+    fields: [inventory.pharmacyId],
+    references: [pharmacies.id],
+  }),
+  drug: one(drugs, {
+    fields: [inventory.drugId],
+    references: [drugs.id],
+  }),
+}));
+
+export const verificationsRelations = relations(verifications, ({ one }) => ({
+  drug: one(drugs, {
+    fields: [verifications.drugId],
+    references: [drugs.id],
+  }),
+  user: one(users, {
+    fields: [verifications.userId],
+    references: [users.id],
+  }),
+}));
+
 export type User = typeof users.$inferSelect;
 export type Drug = typeof drugs.$inferSelect;
 export type Pharmacy = typeof pharmacies.$inferSelect;
