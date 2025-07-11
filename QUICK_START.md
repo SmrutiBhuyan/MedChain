@@ -2,7 +2,7 @@
 
 ## 🚀 Ultra-Fast Setup (5 Minutes)
 
-You mentioned you have Node.js, Express, and SQL. Here's the fastest way to get MedChain running:
+You mentioned you have Node.js, Express, and PostgreSQL. Here's the fastest way to get MedChain running:
 
 ### Step 1: Extract and Navigate
 ```bash
@@ -24,14 +24,17 @@ npm install
 bash package-install.sh
 ```
 
-### Step 3: Setup Database
+### Step 3: Setup PostgreSQL Database
 ```bash
+# Database is automatically configured via environment variables
+# DATABASE_URL, PGHOST, PGPORT, PGUSER, PGPASSWORD, PGDATABASE
+
 # Create and populate database
 npm run db:push
 npm run db:seed
 
 # Verify database setup
-npm run db:check
+node check-database.js
 ```
 
 ### Step 4: Start Application
@@ -50,14 +53,14 @@ Open your browser and visit:
 
 ### Database Management
 ```bash
-# Check if database is working
-npm run db:check
+# Check if PostgreSQL database is working
+psql $DATABASE_URL -c "SELECT version();"
 
 # View database with detailed info
 node check-database.js
 
 # Reset database if needed
-rm medchain.db && npm run db:push && npm run db:seed
+npm run db:push && npm run db:seed
 ```
 
 ### Application Testing
@@ -68,13 +71,13 @@ curl "http://localhost:5000/api/drugs"
 # Test pharmacy search  
 curl "http://localhost:5000/api/pharmacies"
 
-# Test inventory search
-curl "http://localhost:5000/api/inventory/search?drug=Aspirin&city=Mumbai"
+# Test emergency locator with ACO algorithm
+curl "http://localhost:5000/api/emergency-locator?drugName=Aspirin&city=Mumbai"
 ```
 
 ## 📦 Required Packages for Advanced Features
 
-You have Node.js, Express, and SQL. For the advanced features, install these additional packages:
+You have Node.js, Express, and PostgreSQL. For the advanced features, install these additional packages:
 
 ### Blockchain Features
 ```bash
@@ -115,14 +118,11 @@ This will show you:
 
 ### Method 2: Manual Database Check
 ```bash
-# Install SQLite command line tool
-npm install -g sqlite3
-
-# Open database
-sqlite3 medchain.db
+# Connect to PostgreSQL database
+psql $DATABASE_URL
 
 # Check tables
-.tables
+\dt
 
 # View sample data
 SELECT * FROM users;
@@ -132,13 +132,16 @@ SELECT * FROM pharmacies LIMIT 3;
 # Check relationships
 SELECT d.name, p.name as pharmacy, i.quantity 
 FROM inventory i 
-JOIN drugs d ON i.drugId = d.id 
-JOIN pharmacies p ON i.pharmacyId = p.id;
+JOIN drugs d ON i.id = d.id 
+JOIN pharmacies p ON i.id = p.id;
+
+# Exit
+\q
 ```
 
 ### Method 3: Database Browser (Visual)
-1. Download: https://sqlitebrowser.org/
-2. Install and open `medchain.db`
+1. Download pgAdmin: https://www.pgadmin.org/
+2. Connect using your PostgreSQL credentials
 3. Browse all tables visually
 
 ## ✅ Success Indicators
@@ -146,10 +149,11 @@ JOIN pharmacies p ON i.pharmacyId = p.id;
 Your setup is working correctly if you see:
 
 ### Database Status
-- ✅ Database file exists (medchain.db)
+- ✅ PostgreSQL database connection established
 - ✅ 5 main tables: users, drugs, pharmacies, inventory, verifications
 - ✅ Sample data in each table (3+ records)
 - ✅ Foreign key relationships working
+- ✅ No SQLite native binding issues
 
 ### Application Status
 - ✅ Server starts on http://localhost:5000
@@ -166,9 +170,10 @@ Your setup is working correctly if you see:
 
 ## 🔧 Common Issues & Solutions
 
-### Issue: "Database not found"
+### Issue: "Database connection error"
 ```bash
 # Solution:
+psql $DATABASE_URL -c "SELECT version();"
 npm run db:push
 npm run db:seed
 ```
@@ -213,6 +218,7 @@ npm run db:seed
 - Login with: admin@medchain.com / password
 - Access admin dashboard
 - Add/edit drugs and inventory
+- View PostgreSQL database statistics
 
 ### 4. Advanced Features
 - Blockchain Tracker: http://localhost:5000/blockchain-tracker
@@ -220,29 +226,31 @@ npm run db:seed
 - AI Forecasting: http://localhost:5000/ai-forecasting
 - IVR System: http://localhost:5000/ivr-system
 - Incentives: http://localhost:5000/incentive-system
+- Interactive Maps: Emergency Locator with Ola Maps + OpenStreetMap fallback
 
 ## 📊 Expected Database Content
 
 After running the seed script, you should see:
 
-### Users (3-5 records)
+### Users (3 records)
 - admin@medchain.com (admin role)
-- pharmacy@med.com (pharmacy role)  
-- john@example.com (patient role)
+- pharmacy@medchain.com (pharmacy role)  
+- patient@medchain.com (patient role)
 
-### Drugs (10+ records)
-- Aspirin (ASP001)
-- Paracetamol (PAR001)
-- Ibuprofen (IBU001)
-- And more common medications
+### Drugs (3 records)
+- Paracetamol (MED-2024-001)
+- Aspirin (ASP-2024-045)
+- Amoxicillin (AMX-2024-078)
 
-### Pharmacies (5+ records)
-- Multiple pharmacies across different cities
-- Complete address and contact information
+### Pharmacies (3 records)
+- Apollo Pharmacy (Mumbai) - GPS: 19.1136, 72.8697
+- MedPlus Pharmacy (Mumbai) - GPS: 19.0596, 72.8295
+- HealthMart Pharmacy (Delhi) - GPS: 28.6315, 77.2167
 
-### Inventory (20+ records)
+### Inventory (6 records)
 - Links between drugs and pharmacies
 - Stock quantities for each combination
+- Real-time inventory tracking
 
 ## 🚀 Next Steps After Setup
 

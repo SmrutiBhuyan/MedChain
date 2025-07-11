@@ -4,7 +4,7 @@
 You mentioned you have:
 - Node.js
 - Express
-- SQL
+- PostgreSQL database (automatically provided in Replit environment)
 
 ## Step 1: Extract and Navigate to Project
 ```bash
@@ -69,12 +69,14 @@ npm install razorpay paytm-pg stripe
 npm install upi-payment-gateway
 ```
 
-## Step 8: Database Setup
+## Step 8: Database Setup (PostgreSQL)
 ```bash
-# Install additional database packages
-npm install better-sqlite3 mysql2 pg
-npm install prisma @prisma/client  # Alternative ORM
-npm install sequelize mysql2  # If using MySQL with Sequelize
+# PostgreSQL packages are already installed
+npm list | grep postgres
+# Should show: postgres, drizzle-orm with postgres support
+
+# Database connection is automatically configured via environment variables:
+# DATABASE_URL, PGHOST, PGPORT, PGUSER, PGPASSWORD, PGDATABASE
 ```
 
 ## Step 9: Environment Configuration
@@ -86,16 +88,18 @@ touch .env
 
 Add these variables to `.env`:
 ```env
-# Database Configuration
-DATABASE_URL="file:./medchain.db"
-DB_HOST=localhost
-DB_PORT=3306
-DB_NAME=medchain
-DB_USER=root
-DB_PASSWORD=your_password
+# Database Configuration (PostgreSQL)
+DATABASE_URL=postgresql://username:password@localhost:5432/medchain
+PGHOST=localhost
+PGPORT=5432
+PGDATABASE=medchain
+PGUSER=medchain_user
+PGPASSWORD=secure_password
 
-# JWT Secret
-JWT_SECRET=your-super-secret-jwt-key-here
+# Ola Maps Integration
+OLA_MAPS_API_KEY=SuoxlmXRea98IUzTc8v4sW0cPphMARvFq43BiRQf
+OLA_MAPS_CLIENT_ID=a85454c9-234d-46e7-89f3-b6ab33367df5
+OLA_MAPS_CLIENT_SECRET=67f9a6c4eb784ed0a8fdcdab4ae0d480
 
 # Blockchain Configuration
 ETHEREUM_RPC_URL=https://mainnet.infura.io/v3/your-infura-key
@@ -123,14 +127,14 @@ REDIS_URL=redis://localhost:6379
 
 ## Step 10: Database Setup and Verification
 ```bash
-# Initialize the database
+# Initialize the PostgreSQL database
 npm run db:push
 
 # Seed the database with sample data
 npm run db:seed
 
 # If the above commands don't exist, create them manually:
-npx drizzle-kit push:sqlite
+npx drizzle-kit push:postgres
 ```
 
 ## Step 11: Start the Application
@@ -143,23 +147,23 @@ npm start
 ```
 
 ## Step 12: Verify Database Data
-You can check your database in multiple ways:
+You can check your PostgreSQL database in multiple ways:
 
-### Option 1: Using SQLite Browser
-1. Download DB Browser for SQLite: https://sqlitebrowser.org/
-2. Open the `medchain.db` file in the project root
+### Option 1: Using pgAdmin (PostgreSQL GUI)
+1. Download pgAdmin: https://www.pgadmin.org/
+2. Connect using your PostgreSQL credentials
 3. Browse tables: users, drugs, pharmacies, inventory, verifications
 
-### Option 2: Using Command Line
+### Option 2: Using Command Line (psql)
 ```bash
-# Install sqlite3 command line tool
-npm install -g sqlite3
+# Connect to PostgreSQL database
+psql $DATABASE_URL
 
-# Open database
-sqlite3 medchain.db
+# Or using individual components:
+psql -h $PGHOST -p $PGPORT -U $PGUSER -d $PGDATABASE
 
 # Check tables
-.tables
+\dt
 
 # View data
 SELECT * FROM users;
@@ -169,13 +173,18 @@ SELECT * FROM inventory;
 SELECT * FROM verifications;
 
 # Exit
-.exit
+\q
 ```
 
-### Option 3: Using Database Status Page
-Once the server is running, visit:
-- http://localhost:5000/database-status (HTML interface)
-- http://localhost:5000/api/database-status (JSON API)
+### Option 3: Using SQL Query Tool
+```bash
+# Check database status using built-in tool
+node check-database.js
+
+# Or test via API
+curl http://localhost:5000/api/drugs
+curl http://localhost:5000/api/pharmacies
+```
 
 ## Step 13: Test All Features
 Visit these URLs to test all features:
@@ -201,11 +210,14 @@ PORT=3000 npm run dev
 
 ### Issue 2: Database Connection Error
 ```bash
-# Check if database file exists
-ls -la medchain.db
+# Check PostgreSQL connection
+psql $DATABASE_URL -c "SELECT version();"
 
-# If not, create it
-touch medchain.db
+# If connection fails, verify environment variables
+echo $DATABASE_URL
+echo $PGHOST $PGPORT $PGDATABASE
+
+# Reinitialize database
 npm run db:push
 ```
 
@@ -257,11 +269,11 @@ pm2 logs medchain
 
 ## Database Backup
 ```bash
-# Backup database
-cp medchain.db medchain.db.backup
+# Backup PostgreSQL database
+pg_dump $DATABASE_URL > medchain_backup.sql
 
-# Restore database
-cp medchain.db.backup medchain.db
+# Restore PostgreSQL database
+psql $DATABASE_URL < medchain_backup.sql
 ```
 
 ## Testing
@@ -317,13 +329,16 @@ ganache-cli -p 8545 -a 10 -e 1000
 ## Final Verification Checklist
 
 1. ✅ Server starts on http://localhost:5000
-2. ✅ Database file exists and contains data
-3. ✅ All pages load without errors
-4. ✅ User registration and login work
-5. ✅ Drug verification returns results
-6. ✅ Emergency locator shows pharmacies
-7. ✅ Advanced features are accessible
-8. ✅ API endpoints respond correctly
+2. ✅ PostgreSQL database connection established
+3. ✅ All 5 tables created: users, drugs, pharmacies, inventory, verifications
+4. ✅ Sample data populated (3+ records per table)
+5. ✅ All pages load without errors
+6. ✅ User registration and login work
+7. ✅ Drug verification returns results
+8. ✅ Emergency locator shows pharmacies with interactive maps
+9. ✅ Maps display correctly (Ola Maps with OpenStreetMap fallback)
+10. ✅ Advanced features are accessible
+11. ✅ API endpoints respond correctly
 
 ## Getting Help
 

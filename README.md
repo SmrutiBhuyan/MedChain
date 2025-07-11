@@ -51,36 +51,51 @@ MedChain is a comprehensive full-stack healthcare supply chain management system
 - **Zod**: Runtime type validation
 
 ### Database & Storage
-- **MySQL-Compatible Database**: SQLite with MySQL syntax and functionality
-- **Drizzle ORM**: Type-safe database operations with MySQL-style schemas
-- **Auto-increment Primary Keys**: MySQL-standard database design
-- **Foreign Key Constraints**: Proper referential integrity
+- **PostgreSQL**: Production-ready relational database with full ACID compliance
+- **Drizzle ORM**: Type-safe database operations with PostgreSQL-specific features
+- **Auto-increment Primary Keys**: PostgreSQL `generatedAlwaysAsIdentity()` implementation
+- **Foreign Key Constraints**: Proper referential integrity with PostgreSQL foreign keys
+- **Cross-Platform Compatibility**: No SQLite native binding issues
 
 ### AI & Algorithms
 - **Ant Colony Optimization**: Emergency stock locator optimization
 - **Geolocation API**: Distance-based pharmacy ranking
 - **Real-time Analytics**: Smart inventory management
 
-## 🚀 Complete Setup Guide
+## 🚀 Complete Localhost Setup Guide
 
 ### Prerequisites
 - Node.js 18 or higher
 - npm or yarn package manager
 - Modern web browser with geolocation support
+- PostgreSQL database (provided automatically in Replit environment)
 
-### Step 1: Project Setup
+### Step 1: Environment Setup
+The system uses PostgreSQL with all required environment variables pre-configured:
 ```bash
-# Clone or download the project
-# All dependencies are already installed
+# Database connection is automatically available via:
+# DATABASE_URL, PGHOST, PGPORT, PGUSER, PGPASSWORD, PGDATABASE
+```
 
-# Verify installation
+### Step 2: Install Dependencies
+```bash
+# All dependencies are already installed including:
+# - React/TypeScript frontend with Vite
+# - Express.js backend with PostgreSQL
+# - Drizzle ORM for database operations
+# - Ola Maps integration with OpenStreetMap fallback
+# - Complete UI components with shadcn/ui
 npm list --depth=0
 ```
 
-### Step 2: Environment Configuration
-The system works out of the box with default settings. No additional environment variables are required for development.
+### Step 3: Database Initialization
+```bash
+# Database schema is automatically created and seeded
+# PostgreSQL tables: users, drugs, pharmacies, inventory, verifications
+# Sample data includes 3+ records in each table
+```
 
-### Step 3: Start the Application
+### Step 4: Start the Application
 ```bash
 # Start both frontend and backend servers
 npm run dev
@@ -88,24 +103,31 @@ npm run dev
 
 The application will be available at `http://localhost:5000`
 
-### Step 4: Test the System
+### Step 5: Map Integration Setup
+The system includes:
+- **Primary**: Ola Maps API with key: `SuoxlmXRea98IUzTc8v4sW0cPphMARvFq43BiRQf`
+- **Fallback**: OpenStreetMap tiles for 100% reliability
+- **Auto-detection**: Automatically switches to fallback if Ola Maps is unavailable
+
+### Step 6: Test the System
 
 #### 1. Test Drug Verification
 - Navigate to "Verify Drug" page
-- Enter batch number: `BN001` (sample drug)
-- Or scan QR code if available
+- Enter batch number: `MED-2024-001` (Paracetamol)
+- Or try: `ASP-2024-045` (Aspirin), `AMX-2024-078` (Amoxicillin)
 - View verification result with blockchain transaction ID
 
-#### 2. Test Emergency Locator
+#### 2. Test Emergency Locator with Maps
 - Go to "Emergency Locator" page
-- Search for: Drug: `Paracetamol`, City: `Mumbai`
+- Search for: Drug: `Aspirin`, City: `Mumbai`
 - Enable location access for optimized results
 - View ACO-optimized pharmacy rankings
+- **Interactive Map**: See pharmacy locations with automatic fallback system
 
 #### 3. Test Admin Features
 - Login with admin credentials:
   - Email: `admin@medchain.com`
-  - Password: `admin123`
+  - Password: `password`
 - Access admin dashboard
 - Add new drugs with automatic QR code generation
 - View system statistics
@@ -113,7 +135,7 @@ The application will be available at `http://localhost:5000`
 #### 4. Test Pharmacy Features
 - Login with pharmacy credentials:
   - Email: `pharmacy@medchain.com`
-  - Password: `pharmacy123`
+  - Password: `password`
 - Manage inventory
 - View stock alerts
 - Update drug quantities
@@ -166,24 +188,26 @@ The application will be available at `http://localhost:5000`
 
 ## 🔧 Technical Implementation
 
-### Database Schema
+### PostgreSQL Database Schema
 ```sql
 -- Users (multi-role system)
-users: id, name, email, password, role, created_at
+users: id (serial), name, email, password, role, created_at (timestamp)
 
 -- Drugs (batch tracking)
-drugs: id, name, batch_number, manufacturer, expiry_date, 
-       qr_code_url, is_counterfeit, created_at
+drugs: id (serial), name, batch_number, manufacturer, expiry_date, 
+       category, strength, description, qr_code_url, is_counterfeit, created_at
 
--- Pharmacies (location-based)
-pharmacies: id, name, address, city, contact, lat, lng, 
-           user_id, created_at
+-- Pharmacies (location-based with GPS)
+pharmacies: id (serial), name, address, city, contact, lat, lng, 
+           user_id (foreign key), created_at
 
 -- Inventory (real-time tracking)
-inventory: id, drug_id, pharmacy_id, quantity, last_updated
+inventory: id (serial), drug_id (foreign key), pharmacy_id (foreign key), 
+          quantity, last_updated (timestamp)
 
 -- Verifications (audit trail)
-verifications: id, drug_id, user_id, location, result, timestamp
+verifications: id (serial), drug_id (foreign key), user_id (foreign key), 
+              location, result, timestamp
 ```
 
 ### API Endpoints
@@ -225,10 +249,12 @@ Formula: `Score = (Pheromone^α × Distance^β × Freshness) × Weights`
 ## 🧪 Testing the System
 
 ### Sample Data Available
-- **Admin User**: admin@medchain.com / admin123
-- **Pharmacy User**: pharmacy@medchain.com / pharmacy123
-- **Sample Drugs**: BN001, BN002, BN003 (various manufacturers)
-- **Sample Pharmacies**: Apollo Pharmacy, MedPlus, etc.
+- **Admin User**: admin@medchain.com / password
+- **Pharmacy User**: pharmacy@medchain.com / password  
+- **Patient User**: patient@medchain.com / password
+- **Sample Drugs**: MED-2024-001 (Paracetamol), ASP-2024-045 (Aspirin), AMX-2024-078 (Amoxicillin)
+- **Sample Pharmacies**: Apollo Pharmacy (Mumbai), MedPlus (Mumbai), HealthMart (Delhi)
+- **GPS Coordinates**: All pharmacies include accurate latitude/longitude for mapping
 
 ### Test Scenarios
 1. **Drug Verification Flow**
@@ -291,13 +317,15 @@ Formula: `Score = (Pheromone^α × Distance^β × Freshness) × Weights`
 - **Lazy Loading**: Components loaded on demand
 - **Bundle Optimization**: Vite's optimized builds
 
-## 🚀 Deployment Ready
+## 🚀 Production Ready
 
 The application is configured for easy deployment:
 - **Production Build**: `npm run build`
-- **Environment Variables**: Configurable for production
-- **Database**: Ready for PostgreSQL connection
+- **PostgreSQL Database**: Fully integrated with proper schema and relationships
+- **Environment Variables**: Pre-configured for Replit deployment
 - **Static Assets**: Optimized for CDN delivery
+- **Cross-Platform**: No SQLite native binding issues
+- **Map Integration**: Reliable with intelligent fallback system
 
 ## 📞 Support
 
