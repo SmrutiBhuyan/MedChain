@@ -49,10 +49,59 @@ const OlaMap: React.FC<OlaMapProps> = ({
 
     const initializeMap = async () => {
       try {
-        // Initialize Ola Maps
+        // Initialize Ola Maps with fallback to OpenStreetMap
+        const olaMapStyleUrl = `https://api.olamaps.io/tiles/v1/styles/default/style.json?api_key=${apiKey}`;
+        
+        // Test if Ola Maps is available, fallback to OpenStreetMap if not
+        let mapStyleUrl = olaMapStyleUrl;
+        try {
+          const response = await fetch(olaMapStyleUrl);
+          if (!response.ok) {
+            console.warn('Ola Maps API not available, using OpenStreetMap fallback');
+            mapStyleUrl = {
+              version: 8,
+              sources: {
+                'osm-tiles': {
+                  type: 'raster',
+                  tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
+                  tileSize: 256,
+                  attribution: '© OpenStreetMap contributors'
+                }
+              },
+              layers: [
+                {
+                  id: 'osm-tiles',
+                  type: 'raster',
+                  source: 'osm-tiles'
+                }
+              ]
+            };
+          }
+        } catch (error) {
+          console.warn('Ola Maps API test failed, using OpenStreetMap fallback');
+          mapStyleUrl = {
+            version: 8,
+            sources: {
+              'osm-tiles': {
+                type: 'raster',
+                tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
+                tileSize: 256,
+                attribution: '© OpenStreetMap contributors'
+              }
+            },
+            layers: [
+              {
+                id: 'osm-tiles',
+                type: 'raster',
+                source: 'osm-tiles'
+              }
+            ]
+          };
+        }
+        
         map = new maplibregl.Map({
           container: mapContainer.current!,
-          style: `https://api.olamaps.io/tiles/v1/styles/default-light-standard/style.json?api_key=${apiKey}`,
+          style: mapStyleUrl,
           center: center,
           zoom: zoom,
           attributionControl: false
@@ -60,7 +109,7 @@ const OlaMap: React.FC<OlaMapProps> = ({
 
         // Add attribution
         map.addControl(new maplibregl.AttributionControl({
-          customAttribution: '© Ola Maps'
+          customAttribution: typeof mapStyleUrl === 'string' && mapStyleUrl.includes('olamaps') ? '© Ola Maps' : '© OpenStreetMap contributors'
         }), 'bottom-right');
 
         // Add navigation controls
@@ -72,14 +121,14 @@ const OlaMap: React.FC<OlaMapProps> = ({
         map.on('load', () => {
           if (isMounted) {
             setIsLoading(false);
-            console.log('🗺️ Ola Maps loaded successfully');
+            console.log('🗺️ Map loaded successfully');
           }
         });
 
         map.on('error', (e) => {
           if (isMounted) {
             console.error('Map error:', e);
-            setError('Failed to load map. Please check your API key.');
+            setError('Failed to load map. Using backup map service.');
             setIsLoading(false);
           }
         });
