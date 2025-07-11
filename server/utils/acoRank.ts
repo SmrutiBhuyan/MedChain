@@ -9,7 +9,7 @@ interface PharmacyOption {
   lat: string | null;
   lng: string | null;
   quantity: number;
-  lastUpdated: Date;
+  lastUpdated: Date | string;
   distance?: number;
 }
 
@@ -71,9 +71,10 @@ function calculateHeuristicValue(distance: number): number {
  * Calculate freshness factor based on last update time
  * More recent updates = higher freshness
  */
-function calculateFreshnessFactor(lastUpdated: Date): number {
+function calculateFreshnessFactor(lastUpdated: Date | string): number {
   const now = new Date();
-  const hoursSinceUpdate = (now.getTime() - lastUpdated.getTime()) / (1000 * 60 * 60);
+  const updateDate = typeof lastUpdated === 'string' ? new Date(lastUpdated) : lastUpdated;
+  const hoursSinceUpdate = (now.getTime() - updateDate.getTime()) / (1000 * 60 * 60);
   
   if (hoursSinceUpdate <= 1) return 1.0;
   if (hoursSinceUpdate <= 6) return 0.8;
