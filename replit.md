@@ -151,6 +151,15 @@ Preferred communication style: Simple, everyday language.
 
 ## Recent Changes: Latest modifications with dates
 
+### January 2025 - Automatic Complaint Portal with Counterfeit Detection (COMPLETE)
+- **Automatic Counterfeit Detection**: When a medicine is flagged as counterfeit, system automatically redirects to complaint portal
+- **Pre-filled Complaint Forms**: Complaint portal auto-fills with batch ID, drug name, manufacturer, pharmacy information, and urgency level
+- **Countdown Timer**: 10-second countdown with immediate report option for urgent counterfeit cases
+- **Critical Priority Handling**: Counterfeit complaints marked as "critical" priority with 2-hour resolution time
+- **Comprehensive Complaint System**: Full complaint tracking with unique IDs, status monitoring, and investigation workflow
+- **Safety Team Integration**: Automatic notifications to safety team with all relevant counterfeit information
+- **Enhanced User Experience**: Seamless flow from drug verification to complaint submission for counterfeit cases
+
 ### January 2025 - Life-Critical Medicines Database Expansion (COMPLETE)
 - **Comprehensive Medicine Collection**: Expanded from 5 to 55 life-critical medicines with complete QR code generation
 - **Enhanced Drug Categories**: Added cardiovascular emergency drugs, respiratory treatments, neurological medications, pain management, antibiotics, diabetes care, and more

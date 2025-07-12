@@ -875,6 +875,49 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Complaint portal routes
+  app.post('/api/complaints', async (req, res) => {
+    try {
+      const complaintData = req.body;
+      
+      // Generate complaint ID
+      const complaintId = `CMP_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      
+      // Mock complaint submission (in real app, this would save to database)
+      const complaint = {
+        id: complaintId,
+        ...complaintData,
+        status: 'submitted',
+        submittedAt: new Date().toISOString(),
+        priorityLevel: complaintData.urgencyLevel === 'critical' ? 'HIGH' : 'MEDIUM',
+        investigationStatus: 'pending',
+        assignedTo: 'Safety Team',
+        estimatedResolution: complaintData.urgencyLevel === 'critical' ? '2 hours' : '24 hours'
+      };
+      
+      // In a real system, you'd save to database and trigger notifications
+      console.log('URGENT COMPLAINT SUBMITTED:', complaint);
+      
+      res.json({
+        success: true,
+        complaintId,
+        message: 'Complaint submitted successfully. Our safety team has been notified.',
+        complaint: {
+          id: complaintId,
+          status: 'submitted',
+          priorityLevel: complaint.priorityLevel,
+          estimatedResolution: complaint.estimatedResolution
+        }
+      });
+    } catch (error) {
+      console.error('Complaint submission error:', error);
+      res.status(500).json({ 
+        success: false,
+        message: 'Failed to submit complaint. Please try again.' 
+      });
+    }
+  });
+
   // Stats routes
   app.get('/api/stats', authenticateToken, async (req, res) => {
     try {

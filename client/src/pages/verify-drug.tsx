@@ -3,10 +3,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { QrCode, Keyboard, CheckCircle, XCircle } from "lucide-react";
+import { QrCode, Keyboard, CheckCircle, XCircle, AlertTriangle } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import { useLocation } from "wouter";
 import QRScanner from "@/components/qr-scanner";
 
 interface VerificationResult {
@@ -31,7 +32,10 @@ export default function VerifyDrug() {
   const [drugName, setDrugName] = useState("");
   const [showScanner, setShowScanner] = useState(false);
   const [verificationResult, setVerificationResult] = useState<VerificationResult | null>(null);
+  const [showRedirectCountdown, setShowRedirectCountdown] = useState(false);
+  const [redirectCountdown, setRedirectCountdown] = useState(10);
   const { toast } = useToast();
+  const [, setLocation] = useLocation();
 
   const verifyMutation = useMutation({
     mutationFn: async (data: { batchNumber: string }) => {
@@ -40,10 +44,32 @@ export default function VerifyDrug() {
     },
     onSuccess: (data) => {
       setVerificationResult(data);
-      toast({
-        title: "Verification Complete",
-        description: `Drug is ${data.result === "genuine" ? "authentic" : "counterfeit"}`,
-      });
+      
+      if (data.result === "counterfeit" || data.drug.isCounterfeit) {
+        toast({
+          title: "COUNTERFEIT DETECTED",
+          description: "This drug is counterfeit! Redirecting to complaint portal...",
+          variant: "destructive",
+        });
+        
+        // Start countdown for auto-redirect
+        setShowRedirectCountdown(true);
+        const countdown = setInterval(() => {
+          setRedirectCountdown((prev) => {
+            if (prev <= 1) {
+              clearInterval(countdown);
+              redirectToComplaintPortal(data.drug);
+              return 0;
+            }
+            return prev - 1;
+          });
+        }, 1000);
+      } else {
+        toast({
+          title: "Verification Complete",
+          description: "Drug is authentic and safe to use",
+        });
+      }
     },
     onError: (error: any) => {
       toast({
@@ -53,6 +79,25 @@ export default function VerifyDrug() {
       });
     },
   });
+
+  const redirectToComplaintPortal = (drug: any) => {
+    // Create URL with pre-filled parameters
+    const params = new URLSearchParams({
+      batchNumber: drug.batchNumber,
+      drugName: drug.name,
+      manufacturer: drug.manufacturer,
+      complaintType: "Counterfeit Drug Detection",
+      urgencyLevel: "critical",
+    });
+    
+    setLocation(`/complaint-portal?${params.toString()}`);
+  };
+
+  const handleImmediateReport = () => {
+    if (verificationResult) {
+      redirectToComplaintPortal(verificationResult.drug);
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -173,7 +218,7 @@ export default function VerifyDrug() {
                 ) : (
                   <XCircle className="h-8 w-8 text-red-600 mr-3" />
                 )}
-                <div>
+                <div className="flex-1">
                   <h3 className={`text-lg font-semibold ${
                     verificationResult.result === "genuine" 
                       ? "text-green-600" 
@@ -181,13 +226,45 @@ export default function VerifyDrug() {
                   }`}>
                     {verificationResult.result === "genuine" 
                       ? "Authentic Drug Verified" 
-                      : "Counterfeit Drug Detected"}
+                      : "⚠️ COUNTERFEIT DRUG DETECTED"}
                   </h3>
                   <p className="text-sm text-gray-600">
                     Batch: {verificationResult.drug.batchNumber}
                   </p>
                 </div>
+                
+                {verificationResult.result !== "genuine" && (
+                  <div className="text-right">
+                    <Button
+                      onClick={handleImmediateReport}
+                      className="bg-red-600 hover:bg-red-700 text-white"
+                    >
+                      Report Now
+                    </Button>
+                  </div>
+                )}
               </div>
+              
+              {/* Counterfeit Warning & Auto-redirect */}
+              {verificationResult.result !== "genuine" && showRedirectCountdown && (
+                <div className="mb-6 p-4 bg-red-100 border border-red-300 rounded-lg">
+                  <div className="flex items-center mb-2">
+                    <AlertTriangle className="h-5 w-5 text-red-600 mr-2" />
+                    <h4 className="font-semibold text-red-800">URGENT: Counterfeit Drug Safety Alert</h4>
+                  </div>
+                  <p className="text-red-700 mb-3">
+                    This drug has been identified as counterfeit and may be dangerous. Do not consume this medication.
+                  </p>
+                  <div className="bg-red-50 p-3 rounded border border-red-200">
+                    <p className="text-red-800 font-medium">
+                      Automatically redirecting to complaint portal in {redirectCountdown} seconds...
+                    </p>
+                    <p className="text-sm text-red-600 mt-1">
+                      You will be able to file an official complaint with pre-filled information.
+                    </p>
+                  </div>
+                </div>
+              )}
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
