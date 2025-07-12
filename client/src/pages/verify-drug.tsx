@@ -3,12 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { QrCode, Keyboard, CheckCircle, XCircle, AlertTriangle } from "lucide-react";
+import { QrCode, Keyboard, CheckCircle, XCircle, AlertTriangle, Scan } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "wouter";
-import QRScanner from "@/components/qr-scanner";
+import BarcodeScanner from "@/components/qr-scanner";
 
 interface VerificationResult {
   drug: {
@@ -115,7 +115,7 @@ export default function VerifyDrug() {
     verifyMutation.mutate({ batchNumber: batchNumber.trim() });
   };
 
-  const handleQRScan = (result: string) => {
+  const handleBarcodeScan = (result: string) => {
     setBatchNumber(result);
     setShowScanner(false);
     verifyMutation.mutate({ batchNumber: result });
@@ -128,32 +128,32 @@ export default function VerifyDrug() {
           Drug Verification
         </h1>
         <p className="text-xl text-gray-600">
-          Verify the authenticity of your medication using QR code scanning or batch number lookup.
+          Verify the authenticity of your medication using barcode scanning or batch number lookup.
         </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* QR Code Scanner */}
+        {/* Barcode Scanner */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center">
-              <QrCode className="mr-2 h-5 w-5 text-primary" />
-              QR Code Scanner
+              <Scan className="mr-2 h-5 w-5 text-primary" />
+              Barcode Scanner
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
               <div className="w-16 h-16 bg-gray-100 rounded-lg mx-auto mb-4 flex items-center justify-center">
-                <QrCode className="h-8 w-8 text-gray-400" />
+                <Scan className="h-8 w-8 text-gray-400" />
               </div>
               <p className="text-gray-600 mb-4">
-                Click to activate camera and scan QR code
+                Click to activate camera and scan barcode
               </p>
               <Button
                 onClick={() => setShowScanner(true)}
                 className="bg-primary hover:bg-blue-700"
               >
-                Start Scanner
+                📱 Scan Barcode
               </Button>
             </div>
           </CardContent>
@@ -313,10 +313,10 @@ export default function VerifyDrug() {
         </Card>
       )}
 
-      {/* QR Scanner Modal */}
+      {/* Barcode Scanner Modal */}
       {showScanner && (
-        <QRScanner
-          onScan={handleQRScan}
+        <BarcodeScanner
+          onScan={handleBarcodeScan}
           onClose={() => setShowScanner(false)}
         />
       )}

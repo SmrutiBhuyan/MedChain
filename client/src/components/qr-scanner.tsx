@@ -1,13 +1,13 @@
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Camera, X } from "lucide-react";
+import { Camera, X, Scan } from "lucide-react";
 
-interface QRScannerProps {
+interface BarcodeScannerProps {
   onScan: (result: string) => void;
   onClose: () => void;
 }
 
-export default function QRScanner({ onScan, onClose }: QRScannerProps) {
+export default function BarcodeScanner({ onScan, onClose }: BarcodeScannerProps) {
   const [isScanning, setIsScanning] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -30,20 +30,20 @@ export default function QRScanner({ onScan, onClose }: QRScannerProps) {
           videoRef.current.play();
           setIsScanning(true);
           
-          // Simple QR code detection simulation
-          // In a real app, you would use a library like zxing-js
-          const checkForQR = () => {
-            // Simulate QR code detection after 3 seconds
+          // Simple barcode/QR code detection simulation
+          // In a real app, you would use a library like zxing-js or QuaggaJS
+          const checkForBarcode = () => {
+            // Simulate barcode detection after 3 seconds
             setTimeout(() => {
               if (streamRef.current) {
-                // Simulate finding a QR code
-                const mockQRData = "MED-2024-001"; // Mock batch number
-                onScan(mockQRData);
+                // Simulate finding a barcode with counterfeit batch number
+                const mockBarcodeData = "EPI-2024-001"; // Mock batch number for testing
+                onScan(mockBarcodeData);
               }
             }, 3000);
           };
           
-          checkForQR();
+          checkForBarcode();
         }
       } catch (err) {
         setError("Could not access camera. Please ensure you have granted camera permissions.");
@@ -80,7 +80,7 @@ export default function QRScanner({ onScan, onClose }: QRScannerProps) {
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-semibold">QR Code Scanner</h3>
+          <h3 className="text-lg font-semibold">Barcode & QR Scanner</h3>
           <Button variant="ghost" size="sm" onClick={handleClose}>
             <X className="h-4 w-4" />
           </Button>
@@ -94,9 +94,9 @@ export default function QRScanner({ onScan, onClose }: QRScannerProps) {
         
         {!isScanning && !error && (
           <div className="text-center">
-            <Camera className="h-16 w-16 mx-auto mb-4 text-gray-400" />
+            <Scan className="h-16 w-16 mx-auto mb-4 text-gray-400" />
             <p className="text-gray-600 mb-4">
-              Click the button below to start scanning QR codes
+              Click the button below to start scanning barcodes and QR codes
             </p>
             <Button onClick={handleStartScan} className="bg-primary hover:bg-blue-700">
               Start Camera
@@ -121,7 +121,7 @@ export default function QRScanner({ onScan, onClose }: QRScannerProps) {
               </div>
             </div>
             <p className="text-center text-gray-600">
-              Position the QR code within the frame
+              Position the barcode or QR code within the frame
             </p>
           </div>
         )}

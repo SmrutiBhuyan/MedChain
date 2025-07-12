@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barcode Samples - MedChain</title>
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .barcode-samples {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        .barcode-sample {
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid;
+        }
+        .counterfeit {
+            background-color: #fef2f2;
+            border-color: #dc2626;
+        }
+        .safe {
+            background-color: #f0f9ff;
+            border-color: #16a34a;
+        }
+        .barcode-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .batch-number {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 10px 0;
+            font-family: monospace;
+            background-color: #f8f9fa;
+            padding: 8px 12px;
+            border-radius: 5px;
+            display: inline-block;
+        }
+        .drug-info {
+            background-color: rgba(255,255,255,0.9);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            text-align: left;
+        }
+        .drug-info h3 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+        .drug-info p {
+            margin: 5px 0;
+            color: #666;
+        }
+        .status {
+            font-size: 16px;
+            font-weight: bold;
+            padding: 8px 16px;
+            border-radius: 20px;
+            margin: 10px 0;
+            display: inline-block;
+        }
+        .counterfeit .status {
+            background-color: #dc2626;
+            color: white;
+        }
+        .safe .status {
+            background-color: #16a34a;
+            color: white;
+        }
+        .instructions {
+            background-color: #e8f5e8;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .warning {
+            background-color: #fef3cd;
+            border: 1px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .barcode-text {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #333;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>MedChain Barcode Samples</h1>
+        <p class="subtitle">Scan these barcodes to test the drug verification system</p>
+        
+        <div class="instructions">
+            <h3>How to Test Barcode Scanning:</h3>
+            <ol>
+                <li>Open MedChain app at <strong>localhost:5000</strong></li>
+                <li>Go to <strong>"Verify Drug"</strong> page</li>
+                <li>Click <strong>"Scan Barcode"</strong> button</li>
+                <li>Point camera at any barcode below</li>
+                <li>Watch the verification results</li>
+            </ol>
+            <p><strong>Note:</strong> The scanner will automatically detect the batch number from the barcode.</p>
+        </div>
+        
+        <div class="barcode-samples">
+            <!-- Counterfeit Drug Barcode -->
+            <div class="barcode-sample counterfeit">
+                <h2>🚨 COUNTERFEIT DRUG</h2>
+                <div class="barcode-container">
+                    <svg id="counterfeit-barcode"></svg>
+                    <div class="barcode-text">EPI-2024-001</div>
+                </div>
+                <div class="batch-number">EPI-2024-001</div>
+                <div class="status">⚠️ COUNTERFEIT</div>
+                <div class="drug-info">
+                    <h3>Epinephrine Auto-Injector</h3>
+                    <p><strong>Manufacturer:</strong> EmergiMed</p>
+                    <p><strong>Strength:</strong> 1mg/ml</p>
+                    <p><strong>NDC:</strong> 12345-678-90</p>
+                    <p><strong>Lot:</strong> EPI001</p>
+                </div>
+                <div class="warning">
+                    <strong>Expected Result:</strong> System will detect counterfeit, show red alert, countdown timer, and auto-redirect to complaint portal with pre-filled form.
+                </div>
+            </div>
+            
+            <!-- Safe Drug Barcode -->
+            <div class="barcode-sample safe">
+                <h2>✅ SAFE MEDICINE</h2>
+                <div class="barcode-container">
+                    <svg id="safe-barcode"></svg>
+                    <div class="barcode-text">INS-2024-026</div>
+                </div>
+                <div class="batch-number">INS-2024-026</div>
+                <div class="status">✅ GENUINE</div>
+                <div class="drug-info">
+                    <h3>Insulin Regular</h3>
+                    <p><strong>Manufacturer:</strong> DiabetesLife</p>
+                    <p><strong>Strength:</strong> 100 units/ml</p>
+                    <p><strong>NDC:</strong> 54321-987-65</p>
+                    <p><strong>Lot:</strong> INS026</p>
+                </div>
+                <div class="warning" style="background-color: #d4edda; border-color: #c3e6cb;">
+                    <strong>Expected Result:</strong> System will verify as genuine, show green checkmark, display drug information with blockchain verification.
+                </div>
+            </div>
+            
+            <!-- Additional Safe Drug Barcode -->
+            <div class="barcode-sample safe">
+                <h2>✅ SAFE MEDICINE</h2>
+                <div class="barcode-container">
+                    <svg id="morphine-barcode"></svg>
+                    <div class="barcode-text">MOR-2024-041</div>
+                </div>
+                <div class="batch-number">MOR-2024-041</div>
+                <div class="status">✅ GENUINE</div>
+                <div class="drug-info">
+                    <h3>Morphine Sulfate</h3>
+                    <p><strong>Manufacturer:</strong> PainRelief Inc</p>
+                    <p><strong>Strength:</strong> 10mg/ml</p>
+                    <p><strong>NDC:</strong> 67890-123-45</p>
+                    <p><strong>Lot:</strong> MOR041</p>
+                </div>
+                <div class="warning" style="background-color: #d4edda; border-color: #c3e6cb;">
+                    <strong>Expected Result:</strong> System will verify as genuine, show green checkmark, display drug information with blockchain verification.
+                </div>
+            </div>
+            
+            <!-- Additional Safe Drug Barcode -->
+            <div class="barcode-sample safe">
+                <h2>✅ SAFE MEDICINE</h2>
+                <div class="barcode-container">
+                    <svg id="digoxin-barcode"></svg>
+                    <div class="barcode-text">DIG-2024-051</div>
+                </div>
+                <div class="batch-number">DIG-2024-051</div>
+                <div class="status">✅ GENUINE</div>
+                <div class="drug-info">
+                    <h3>Digoxin</h3>
+                    <p><strong>Manufacturer:</strong> CardioMed</p>
+                    <p><strong>Strength:</strong> 0.25mg</p>
+                    <p><strong>NDC:</strong> 11223-344-55</p>
+                    <p><strong>Lot:</strong> DIG051</p>
+                </div>
+                <div class="warning" style="background-color: #d4edda; border-color: #c3e6cb;">
+                    <strong>Expected Result:</strong> System will verify as genuine, show green checkmark, display drug information with blockchain verification.
+                </div>
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <h3>Alternative Manual Testing:</h3>
+            <p>If barcode scanning doesn't work, you can manually enter these batch numbers:</p>
+            <ul>
+                <li><strong>EPI-2024-001</strong> - Will trigger counterfeit detection and complaint portal</li>
+                <li><strong>INS-2024-026</strong> - Will show as genuine/safe</li>
+                <li><strong>MOR-2024-041</strong> - Will show as genuine/safe</li>
+                <li><strong>DIG-2024-051</strong> - Will show as genuine/safe</li>
+            </ul>
+        </div>
+        
+        <div class="warning">
+            <strong>Demo Note:</strong> The counterfeit detection system demonstrates automatic safety measures. In production, only authorized pharmaceutical companies can generate legitimate barcodes with proper NDC codes.
+        </div>
+    </div>
+    
+    <script>
+        // Generate barcodes when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Generate counterfeit barcode (red)
+            JsBarcode("#counterfeit-barcode", "EPI-2024-001", {
+                format: "CODE128",
+                width: 2,
+                height: 100,
+                displayValue: true,
+                fontOptions: "bold",
+                fontSize: 20,
+                textMargin: 10,
+                background: "#ffffff",
+                lineColor: "#dc2626"
+            });
+            
+            // Generate safe insulin barcode (green)
+            JsBarcode("#safe-barcode", "INS-2024-026", {
+                format: "CODE128",
+                width: 2,
+                height: 100,
+                displayValue: true,
+                fontOptions: "bold",
+                fontSize: 20,
+                textMargin: 10,
+                background: "#ffffff",
+                lineColor: "#16a34a"
+            });
+            
+            // Generate morphine barcode (green)
+            JsBarcode("#morphine-barcode", "MOR-2024-041", {
+                format: "CODE128",
+                width: 2,
+                height: 100,
+                displayValue: true,
+                fontOptions: "bold",
+                fontSize: 20,
+                textMargin: 10,
+                background: "#ffffff",
+                lineColor: "#16a34a"
+            });
+            
+            // Generate digoxin barcode (green)
+            JsBarcode("#digoxin-barcode", "DIG-2024-051", {
+                format: "CODE128",
+                width: 2,
+                height: 100,
+                displayValue: true,
+                fontOptions: "bold",
+                fontSize: 20,
+                textMargin: 10,
+                background: "#ffffff",
+                lineColor: "#16a34a"
+            });
+        });
+    </script>
+</body>
+</html>
