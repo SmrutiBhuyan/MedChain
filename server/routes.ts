@@ -945,6 +945,51 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Drug Journey endpoint
+  app.get('/api/drug-journey/:batchNumber', async (req, res) => {
+    try {
+      const batchNumber = req.params.batchNumber;
+      if (!batchNumber) {
+        return res.status(400).json({ message: 'Batch number is required' });
+      }
+      // Find the drug by batch number
+      const drug = await storage.getDrugByBatchNumber(batchNumber);
+      if (!drug) {
+        return res.status(404).json({ message: 'Drug not found' });
+      }
+      // Get all verifications/events for this drug
+      const allVerifications = await storage.getAllVerifications();
+      const journey = allVerifications
+        .filter(v => v.drug && v.drug.batchNumber === batchNumber)
+        .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())
+        .map(v => ({
+          id: v.id,
+          eventType: v.result,
+          timestamp: v.timestamp,
+          location: v.location,
+          handler: v.user ? v.user.name : null,
+          drug: {
+            name: v.drug.name,
+            batchNumber: v.drug.batchNumber,
+            manufacturer: v.drug.manufacturer,
+            isCounterfeit: v.drug.isCounterfeit,
+          },
+          // Add environmental data if available in the future
+        }));
+      res.json({
+        batchNumber,
+        drug: {
+          name: drug.name,
+          manufacturer: drug.manufacturer,
+          isCounterfeit: drug.isCounterfeit,
+        },
+        journey,
+      });
+    } catch (error) {
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
