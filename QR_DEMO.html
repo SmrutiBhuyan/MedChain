@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Verification Demo - MedChain</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .demo-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .counterfeit-alert {
+            background-color: #fee;
+            border: 2px solid #f87171;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .genuine-example {
+            background-color: #f0f9ff;
+            border: 2px solid #60a5fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .qr-code {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .qr-code img {
+            width: 150px;
+            height: 150px;
+            border: 3px solid #333;
+            border-radius: 8px;
+        }
+        .batch-number {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            text-align: center;
+            margin: 10px 0;
+        }
+        .warning {
+            color: #dc2626;
+            font-weight: bold;
+        }
+        .success {
+            color: #16a34a;
+            font-weight: bold;
+        }
+        .step {
+            background-color: #f8f9fa;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid #007bff;
+            border-radius: 4px;
+        }
+        .step-number {
+            background-color: #007bff;
+            color: white;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <h1 style="text-align: center; color: #333;">🏥 MedChain QR Verification Demo</h1>
+        
+        <h2>📱 How to Test QR Code Verification:</h2>
+        
+        <div class="step">
+            <span class="step-number">1</span>
+            <strong>Open MedChain App:</strong> Go to your MedChain application running on localhost:5000
+        </div>
+        
+        <div class="step">
+            <span class="step-number">2</span>
+            <strong>Navigate to Verify Drug:</strong> Click on "Verify Drug" in the navigation menu
+        </div>
+        
+        <div class="step">
+            <span class="step-number">3</span>
+            <strong>Click QR Scanner:</strong> Click the "📱 Scan QR Code" button to open the camera scanner
+        </div>
+        
+        <div class="step">
+            <span class="step-number">4</span>
+            <strong>Scan QR Code:</strong> Point your camera at one of the QR codes below
+        </div>
+        
+        <h2>🔍 Test Examples:</h2>
+        
+        <!-- Counterfeit Drug Example -->
+        <div class="counterfeit-alert">
+            <h3 class="warning">⚠️ COUNTERFEIT DRUG EXAMPLE</h3>
+            <div class="qr-code">
+                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9InJlZCIvPjxjaXJjbGUgY3g9IjUwIiBjeT0iNTAiIHI9IjIwIiBmaWxsPSJ3aGl0ZSIvPjx0ZXh0IHg9IjUwIiB5PSI1NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iYmxhY2siIGZvbnQtc2l6ZT0iMTIiPkVQSTwvdGV4dD48L3N2Zz4=" alt="Counterfeit Epinephrine QR Code">
+            </div>
+            <div class="batch-number warning">EPI-2024-001</div>
+            <p><strong>Drug:</strong> Epinephrine (Emergency Medication)</p>
+            <p><strong>Manufacturer:</strong> EmergiMed</p>
+            <p><strong>Expected Result:</strong> ⚠️ COUNTERFEIT DETECTED</p>
+            <p><strong>What Happens:</strong></p>
+            <ul>
+                <li>System detects counterfeit drug</li>
+                <li>Shows urgent red warning message</li>
+                <li>10-second countdown timer appears</li>
+                <li>Automatically redirects to complaint portal</li>
+                <li>Complaint form pre-filled with all drug information</li>
+            </ul>
+        </div>
+        
+        <!-- Alternative Manual Entry -->
+        <div class="step">
+            <span class="step-number">5</span>
+            <strong>Alternative - Manual Entry:</strong> If QR scanning doesn't work, you can manually enter the batch number <code>EPI-2024-001</code> in the "Batch Number" field
+        </div>
+        
+        <h2>🎯 What You'll See:</h2>
+        
+        <div class="step">
+            <span class="step-number">6</span>
+            <strong>Counterfeit Detection:</strong> The system will show a red alert: "⚠️ COUNTERFEIT DRUG DETECTED"
+        </div>
+        
+        <div class="step">
+            <span class="step-number">7</span>
+            <strong>Auto-Redirect:</strong> After 10 seconds, you'll be automatically redirected to the complaint portal
+        </div>
+        
+        <div class="step">
+            <span class="step-number">8</span>
+            <strong>Pre-filled Form:</strong> The complaint form will be automatically populated with:
+            <ul style="margin-top: 10px;">
+                <li>Batch Number: EPI-2024-001</li>
+                <li>Drug Name: Epinephrine</li>
+                <li>Manufacturer: EmergiMed</li>
+                <li>Pharmacy: Apollo Pharmacy</li>
+                <li>Urgency Level: Critical</li>
+                <li>Description: Pre-written urgent safety alert</li>
+            </ul>
+        </div>
+        
+        <div class="step">
+            <span class="step-number">9</span>
+            <strong>Complete Complaint:</strong> Fill in your personal details and submit the complaint for official investigation
+        </div>
+        
+        <h2>📋 Additional Test Cases:</h2>
+        
+        <p>You can also test with these batch numbers manually:</p>
+        <ul>
+            <li><strong>INS-2024-026</strong> - Insulin (should be genuine)</li>
+            <li><strong>MOR-2024-041</strong> - Morphine (should be genuine)</li>
+            <li><strong>DIG-2024-051</strong> - Digoxin (should be genuine)</li>
+        </ul>
+        
+        <div style="background-color: #e8f5e8; padding: 15px; border-radius: 8px; margin-top: 20px;">
+            <h3 style="color: #2d5a2d; margin-top: 0;">✅ Demo Success Indicators:</h3>
+            <ul style="color: #2d5a2d;">
+                <li>QR code scanner opens camera successfully</li>
+                <li>Batch number EPI-2024-001 triggers counterfeit detection</li>
+                <li>Red warning alert appears</li>
+                <li>10-second countdown timer shows</li>
+                <li>Automatic redirect to complaint portal</li>
+                <li>Form fields are pre-populated with drug information</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
