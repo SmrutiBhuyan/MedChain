@@ -189,7 +189,7 @@ Preferred communication style: Simple, everyday language.
 
 ### January 2025 - Advanced Features Implementation (COMPLETE)
 - **End-to-End Blockchain Traceability**: Complete drug tracking with immutable blockchain records, NFT assignment, and transaction logging
-- **Real-Time IoT Environmental Monitoring**: Smart sensors for temperature, humidity, and storage conditions with live alerts and battery monitoring
+- **Real-Time Inventory Tracking**: Smart monitoring for medicine quantities, stock levels, and supply chain movements with live alerts and movement tracking
 - **AI-Powered Demand Forecasting**: Machine learning algorithms for demand prediction, stock optimization, and shortage prevention with 92.5% accuracy
 - **Voice-Based IVR System**: Multilingual voice verification system supporting 8 languages for offline drug verification and availability checking
 - **Incentive & Rewards System**: UPI-integrated cashback system with loyalty points, referral bonuses, and gamification features

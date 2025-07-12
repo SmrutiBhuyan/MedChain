@@ -18,7 +18,7 @@ export default function Header() {
 
   const advancedFeatures = [
     { name: "Blockchain Tracker", href: "/blockchain-tracker" },
-    { name: "IoT Monitoring", href: "/iot-monitoring" },
+    { name: "Inventory Tracking", href: "/iot-monitoring" },
     { name: "AI Forecasting", href: "/ai-forecasting" },
     { name: "IVR System", href: "/ivr-system" },
     { name: "Incentives", href: "/incentive-system" },
