@@ -32,7 +32,7 @@ export default function Landing() {
               Track Trust. Fight Fakes.
             </h1>
             <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">
-              Secure, traceable, AI-powered healthcare supply chain management to ensure drug authenticity and save lives.
+              Verify every dose. Track every move. Trust every medicine.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4 max-w-lg mx-auto">
               <Link href="/verify-drug">

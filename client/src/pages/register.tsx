@@ -177,7 +177,7 @@ export default function Register() {
                     <SelectValue placeholder="Select account type" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="patient">Patient/Doctor</SelectItem>
+                    <SelectItem value="patient">Patient</SelectItem>
                     <SelectItem value="pharmacy">Pharmacy</SelectItem>
                     <SelectItem value="admin">Admin</SelectItem>
                   </SelectContent>

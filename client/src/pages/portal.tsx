@@ -60,7 +60,7 @@ export default function Portal() {
                     Verify Medicine
                   </h3>
                   <p className="text-gray-600">
-                    Check medicine authenticity using QR code or batch number
+                    Check medicine authenticity using Bar code or batch number
                   </p>
                 </div>
               </div>
