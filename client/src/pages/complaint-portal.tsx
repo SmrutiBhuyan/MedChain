@@ -90,6 +90,21 @@ export default function ComplaintPortal() {
     },
   });
 
+  // Update form values when URL parameters change
+  useEffect(() => {
+    if (autoFillData.batchNumber) {
+      form.setValue('batchNumber', autoFillData.batchNumber);
+      form.setValue('drugName', autoFillData.drugName);
+      form.setValue('manufacturer', autoFillData.manufacturer);
+      form.setValue('pharmacyName', autoFillData.pharmacyName);
+      form.setValue('pharmacyAddress', autoFillData.pharmacyAddress);
+      form.setValue('pharmacyContact', autoFillData.pharmacyContact);
+      form.setValue('complaintType', autoFillData.complaintType);
+      form.setValue('urgencyLevel', autoFillData.urgencyLevel);
+      form.setValue('description', `URGENT: Counterfeit drug detected with batch number ${autoFillData.batchNumber}. This medicine failed verification and poses serious health risks.`);
+    }
+  }, [autoFillData, form]);
+
   const complaintMutation = useMutation({
     mutationFn: async (data: ComplaintData) => {
       const response = await apiRequest("POST", "/api/complaints", data);

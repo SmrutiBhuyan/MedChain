@@ -81,13 +81,16 @@ export default function VerifyDrug() {
   });
 
   const redirectToComplaintPortal = (drug: any) => {
-    // Create URL with pre-filled parameters
+    // Create URL with pre-filled parameters including pharmacy info
     const params = new URLSearchParams({
       batchNumber: drug.batchNumber,
       drugName: drug.name,
       manufacturer: drug.manufacturer,
       complaintType: "Counterfeit Drug Detection",
       urgencyLevel: "critical",
+      pharmacyName: "Apollo Pharmacy", // Default pharmacy for testing
+      pharmacyAddress: "Linking Road, Bandra West, Mumbai",
+      pharmacyContact: "+91-22-2640-1234",
     });
     
     setLocation(`/complaint-portal?${params.toString()}`);
