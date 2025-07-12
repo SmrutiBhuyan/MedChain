@@ -11,18 +11,18 @@ export default function Header() {
 
   const navigation = [
     { name: "Home", href: "/" },
-    { name: "Verify Drug", href: "/verify-drug" },
+    { name: "Verify Medicine", href: "/verify-drug" },
     { name: "Emergency Stock", href: "/emergency-locator" },
     { name: "Portal", href: "/portal" },
   ];
 
   const advancedFeatures = [
-    { name: "Blockchain Tracker", href: "/blockchain-tracker" },
-    { name: "Inventory Tracking", href: "/iot-monitoring" },
-    { name: "AI Forecasting", href: "/ai-forecasting" },
-    { name: "IVR System", href: "/ivr-system" },
-    { name: "Incentives", href: "/incentive-system" },
-    { name: "Support", href: "/support" },
+    { name: "Medicine Tracker", href: "/blockchain-tracker" },
+    { name: "Smart Inventory Monitor", href: "/iot-monitoring" },
+    { name: "Demand Predictor", href: "/ai-forecasting" },
+    { name: "Voice Assistant", href: "/ivr-system" },
+    { name: "Rewards Program", href: "/incentive-system" },
+    { name: "Help & Support", href: "/support" },
   ];
 
   const isActive = (href: string) => location === href;
@@ -56,7 +56,7 @@ export default function Header() {
               {/* Advanced Features Dropdown */}
               <div className="relative group">
                 <button className="px-2 py-2 text-sm font-medium text-gray-500 hover:text-primary transition-colors">
-                  Advanced ↓
+                  More Features ↓
                 </button>
                 <div className="absolute top-full left-0 w-48 bg-white shadow-lg border rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                   {advancedFeatures.map((item) => (

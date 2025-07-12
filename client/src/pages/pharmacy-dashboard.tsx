@@ -40,10 +40,16 @@ export default function PharmacyDashboard() {
     totalItems: inventory?.length || 0,
     lowStock: inventory?.filter((item: any) => item.quantity < 10).length || 0,
     expiringSoon: inventory?.filter((item: any) => {
-      const expiryDate = new Date(item.drug.expiryDate);
-      const thirtyDaysFromNow = new Date();
-      thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
-      return expiryDate <= thirtyDaysFromNow;
+      if (!item.drug || !item.drug.expiryDate || item.drug.expiryDate === null || item.drug.expiryDate === undefined) return false;
+      try {
+        const expiryDate = new Date(item.drug.expiryDate);
+        if (isNaN(expiryDate.getTime())) return false; // Invalid date
+        const thirtyDaysFromNow = new Date();
+        thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
+        return expiryDate <= thirtyDaysFromNow;
+      } catch (error) {
+        return false; // If date parsing fails, exclude this item
+      }
     }).length || 0,
     monthlySales: "₹45,230",
   };
@@ -55,6 +61,7 @@ export default function PharmacyDashboard() {
   };
 
   const filteredInventory = inventory?.filter((item: any) => {
+    if (!item.drug) return false;
     const matchesSearch = item.drug.name.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = selectedCategory === "all" || item.drug.category === selectedCategory;
     return matchesSearch && matchesCategory;

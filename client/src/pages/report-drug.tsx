@@ -53,35 +53,12 @@ export default function ReportDrug() {
 
   const reportMutation = useMutation({
     mutationFn: async (data: ReportDrugData) => {
-      // Professional blockchain reporting logging
-      console.log("🚨 BLOCKCHAIN REPORTING - Drug safety report initiated");
+      // Drug safety report logging
+      console.log("🚨 DRUG SAFETY REPORT - Submitting report");
       console.log(`📋 Batch Number: ${data.batchNumber}`);
       console.log(`⚠️  Report Reason: ${data.reason}`);
-      console.log("🌐 Connecting to MedChain fraud detection network...");
       
-      setTimeout(() => {
-        console.log("🔐 Smart Contract: Drug Safety Registry (0x8A7d74B8a6C5F41e2D8e9bE3C7f2e5A9D8C6B4F7)");
-        console.log("📊 Creating immutable fraud report record...");
-        console.log("🚨 Alert Level: HIGH PRIORITY - Counterfeit suspected");
-        console.log("⚡ Gas estimation: 35,000 wei (fraud reporting)");
-        console.log("🌐 Broadcasting to regulatory network...");
-        
-        setTimeout(() => {
-          const txHash = `0x${Math.random().toString(16).substr(2, 8)}${Math.random().toString(16).substr(2, 8)}${Math.random().toString(16).substr(2, 8)}${Math.random().toString(16).substr(2, 8)}`;
-          console.log(`✅ Fraud Report Transaction: ${txHash}`);
-          console.log(`📈 Block Number: ${18500000 + Math.floor(Math.random() * 10000)}`);
-          console.log("🚨 REGULATORY ALERT: Notifying drug safety authorities");
-          console.log("📋 Compliance: FDA, WHO, and local health ministry notified");
-          console.log("🔒 Permanent record created on blockchain");
-          console.log("🏥 Patient Safety Network: Alert broadcasted to all pharmacies");
-          console.log("─────────────────────────────────────────────────────────");
-        }, 1000);
-      }, 500);
-      
-      return await apiRequest("/api/report-drug", {
-        method: "POST",
-        body: JSON.stringify(data),
-      });
+      return await apiRequest("POST", "/api/report-drug", data);
     },
     onSuccess: () => {
       setSubmitted(true);
@@ -102,10 +79,9 @@ export default function ReportDrug() {
   });
 
   const onSubmit = (data: ReportDrugData) => {
-    // Professional blockchain form submission logging
-    console.log("📋 DRUG REPORT FORM - Submitting fraud report to blockchain");
+    // Drug report form submission
+    console.log("📋 DRUG REPORT FORM - Submitting report");
     console.log(`🔍 Batch: ${data.batchNumber} | Reason: ${data.reason}`);
-    console.log("🔗 Initiating blockchain fraud detection pipeline...");
     
     reportMutation.mutate(data);
   };

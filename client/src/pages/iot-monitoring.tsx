@@ -1170,48 +1170,6 @@ export default function RealTimeInventoryTracking() {
         </CardContent>
       </Card>
 
-      {/* Real-Time Blockchain Console */}
-      <Card className="mb-8">
-        <CardHeader>
-          <CardTitle className="flex items-center">
-            <Activity className="mr-2 h-5 w-5 text-blue-600" />
-            Live Blockchain Console
-          </CardTitle>
-          <p className="text-sm text-gray-600 mt-2">
-            Real-time blockchain transaction logging and network activity
-          </p>
-        </CardHeader>
-        <CardContent>
-          <div className="bg-black text-green-400 p-4 rounded-lg font-mono text-sm h-64 overflow-y-auto">
-            <div className="space-y-1">
-              <div className="text-blue-400">🔗 MedChain Blockchain Network - Live Transaction Monitor</div>
-              <div className="text-gray-500">═══════════════════════════════════════════════════════════</div>
-              <div>⚡ Network Status: ACTIVE | Nodes: 47/50 | Latency: 12ms</div>
-              <div>📊 Current Block: #{18500000 + Math.floor(Math.random() * 10000)}</div>
-              <div>🔐 Smart Contracts: 3 active | Gas Price: {15 + Math.floor(Math.random() * 10)} gwei</div>
-              <div className="text-gray-500">───────────────────────────────────────────────────────────</div>
-              <div className="text-yellow-400">🏗️  Mining Block #{18500000 + Math.floor(Math.random() * 10000) + 1}...</div>
-              <div>⚡ Transaction Pool: {Math.floor(Math.random() * 50) + 20} pending</div>
-              <div>📈 Inventory Update: Paracetamol stock verified - Apollo Pharmacy</div>
-              <div>✅ Tx: 0x{Math.random().toString(16).substr(2, 8)}...{Math.random().toString(16).substr(2, 4)}</div>
-              <div>🔒 Verification Record: Insulin batch INS-2024-026 confirmed</div>
-              <div>📊 AI Prediction: High demand forecast logged to blockchain</div>
-              <div>🌐 Network Consensus: 45/60 validators confirmed</div>
-              <div className="text-green-400">✅ Block Mined Successfully | Hash: 0x{Math.random().toString(16).substr(2, 8)}...</div>
-              <div>🚨 Alert: Low stock threshold reached - Mumbai region</div>
-              <div>⚡ Gas Used: {Math.floor(Math.random() * 50000) + 20000} wei</div>
-              <div>📈 Network Health: 98.7% uptime | {Math.floor(Math.random() * 1000) + 500} TPS</div>
-              <div className="text-gray-500">───────────────────────────────────────────────────────────</div>
-              <div className="text-blue-400">🔄 Real-time sync complete | Next block in {Math.floor(Math.random() * 15) + 5}s</div>
-            </div>
-          </div>
-          <div className="mt-4 flex items-center justify-between text-sm text-gray-600">
-            <div>📡 Connected to MedChain Network</div>
-            <div>🕐 Last Update: {new Date().toLocaleTimeString()}</div>
-          </div>
-        </CardContent>
-      </Card>
-
       {/* Real-Time Updates Indicator */}
       <div className="fixed bottom-4 right-4">
         <div className="bg-green-500 text-white px-4 py-2 rounded-lg flex items-center">

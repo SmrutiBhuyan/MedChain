@@ -196,9 +196,11 @@ export default function AdminDashboard() {
               {recentVerifications.map((verification: any) => (
                 <div key={verification.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                   <div>
-                    <p className="font-medium text-gray-900">{verification.drug.name}</p>
+                    <p className="font-medium text-gray-900">
+                      {verification.drug?.name || 'Unknown Drug'}
+                    </p>
                     <p className="text-sm text-gray-600">
-                      Batch: {verification.drug.batchNumber}
+                      Batch: {verification.drug?.batchNumber || 'N/A'}
                     </p>
                   </div>
                   <div className="text-right">

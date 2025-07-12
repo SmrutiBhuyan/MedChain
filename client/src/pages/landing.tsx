@@ -70,9 +70,9 @@ export default function Landing() {
                 <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center mb-4">
                   <Shield className="h-6 w-6 text-white" />
                 </div>
-                <h3 className="text-xl font-semibold mb-2">Drug Verification</h3>
+                <h3 className="text-xl font-semibold mb-2">Medicine Verification</h3>
                 <p className="text-gray-600">
-                  Instantly verify drug authenticity with QR codes, batch numbers, and blockchain logging.
+                  Instantly verify medicine authenticity with QR codes, batch numbers, and secure logging.
                 </p>
               </CardContent>
             </Card>
@@ -94,9 +94,9 @@ export default function Landing() {
                 <div className="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center mb-4">
                   <QrCode className="h-6 w-6 text-white" />
                 </div>
-                <h3 className="text-xl font-semibold mb-2">Blockchain Traceability</h3>
+                <h3 className="text-xl font-semibold mb-2">Medicine Tracker</h3>
                 <p className="text-gray-600">
-                  Complete end-to-end drug tracking with immutable blockchain records and NFT assignment.
+                  Complete end-to-end drug tracking with secure records and digital verification.
                 </p>
               </CardContent>
             </Card>
@@ -106,7 +106,7 @@ export default function Landing() {
                 <div className="w-12 h-12 bg-orange-500 rounded-lg flex items-center justify-center mb-4">
                   <Search className="h-6 w-6 text-white" />
                 </div>
-                <h3 className="text-xl font-semibold mb-2">IoT Environmental Monitoring</h3>
+                <h3 className="text-xl font-semibold mb-2">Smart Storage Monitor</h3>
                 <p className="text-gray-600">
                   Real-time temperature, humidity, and storage condition monitoring with smart sensors.
                 </p>
@@ -118,7 +118,7 @@ export default function Landing() {
                 <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center mb-4">
                   <Search className="h-6 w-6 text-white" />
                 </div>
-                <h3 className="text-xl font-semibold mb-2">AI Demand Forecasting</h3>
+                <h3 className="text-xl font-semibold mb-2">Smart Demand Predictor</h3>
                 <p className="text-gray-600">
                   Machine learning-powered demand prediction to prevent shortages and optimize inventory.
                 </p>
@@ -130,9 +130,9 @@ export default function Landing() {
                 <div className="w-12 h-12 bg-red-500 rounded-lg flex items-center justify-center mb-4">
                   <Search className="h-6 w-6 text-white" />
                 </div>
-                <h3 className="text-xl font-semibold mb-2">Voice-Based IVR System</h3>
+                <h3 className="text-xl font-semibold mb-2">Voice Assistant</h3>
                 <p className="text-gray-600">
-                  Multilingual voice verification system for offline access and rural connectivity.
+                  Multilingual voice verification system for easy access and rural connectivity.
                 </p>
               </CardContent>
             </Card>

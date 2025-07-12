@@ -194,10 +194,10 @@ export default function AIForecasting() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">
-          AI-Powered Demand Forecasting
+          Smart Demand Predictor
         </h1>
         <p className="text-gray-600">
-          Machine learning predictions for drug demand, inventory optimization, and supply chain management
+          Intelligent predictions for medicine demand, smart inventory management, and supply chain optimization
         </p>
       </div>
 
@@ -259,7 +259,7 @@ export default function AIForecasting() {
         <CardHeader>
           <CardTitle className="flex items-center">
             <Brain className="mr-2 h-5 w-5 text-purple-600" />
-            AI Insights & Recommendations
+            Smart Insights & Recommendations
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -274,7 +274,7 @@ export default function AIForecasting() {
                         {insight.impact.toUpperCase()}
                       </Badge>
                       <span className="text-sm text-gray-600">
-                        Confidence: {insight.confidence}%
+                        Reliability: {insight.confidence}%
                       </span>
                     </div>
                     <p className="font-medium text-gray-900 mb-1">{insight.message}</p>
@@ -334,7 +334,7 @@ export default function AIForecasting() {
                     <span className="text-sm text-gray-600 capitalize">{forecast.trend}</span>
                   </div>
                   <div className="text-sm text-gray-600">
-                    {forecast.confidence}% confidence
+                    {forecast.confidence}% reliable
                   </div>
                 </div>
 
@@ -359,7 +359,7 @@ export default function AIForecasting() {
 
                 {/* Key Factors */}
                 <div className="text-sm">
-                  <div className="font-medium text-gray-700 mb-1">Key Factors</div>
+                  <div className="font-medium text-gray-700 mb-1">What's Driving This</div>
                   <ul className="text-gray-600 space-y-1">
                     {forecast.factors.slice(0, 2).map((factor, idx) => (
                       <li key={idx} className="flex items-center gap-1">
@@ -378,7 +378,7 @@ export default function AIForecasting() {
       {/* Demand Pattern Chart */}
       <Card className="mb-8">
         <CardHeader>
-          <CardTitle>Demand Pattern Analysis</CardTitle>
+          <CardTitle>Demand Trends & Patterns</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-6">
@@ -440,25 +440,25 @@ export default function AIForecasting() {
       {/* Model Performance */}
       <Card>
         <CardHeader>
-          <CardTitle>Model Performance Metrics</CardTitle>
+          <CardTitle>Smart Predictor Performance</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             <div className="text-center">
               <div className="text-3xl font-bold text-green-600">92.5%</div>
-              <div className="text-sm text-gray-600">Overall Accuracy</div>
+              <div className="text-sm text-gray-600">Prediction Accuracy</div>
             </div>
             <div className="text-center">
               <div className="text-3xl font-bold text-blue-600">847</div>
-              <div className="text-sm text-gray-600">Predictions Made</div>
+              <div className="text-sm text-gray-600">Smart Predictions</div>
             </div>
             <div className="text-center">
               <div className="text-3xl font-bold text-purple-600">23</div>
-              <div className="text-sm text-gray-600">Shortage Prevented</div>
+              <div className="text-sm text-gray-600">Shortages Prevented</div>
             </div>
             <div className="text-center">
               <div className="text-3xl font-bold text-orange-600">₹2.3M</div>
-              <div className="text-sm text-gray-600">Cost Savings</div>
+              <div className="text-sm text-gray-600">Money Saved</div>
             </div>
           </div>
         </CardContent>

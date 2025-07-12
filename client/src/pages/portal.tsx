@@ -57,10 +57,10 @@ export default function Portal() {
                 </div>
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900">
-                    Verify Drug
+                    Verify Medicine
                   </h3>
                   <p className="text-gray-600">
-                    Check drug authenticity using QR code or batch number
+                    Check medicine authenticity using QR code or batch number
                   </p>
                 </div>
               </div>

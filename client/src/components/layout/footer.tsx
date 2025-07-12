@@ -21,7 +21,7 @@ export default function Footer() {
             <ul className="space-y-2 text-gray-400">
               <li>
                 <Link href="/verify-drug" className="hover:text-white transition-colors">
-                  Drug Verification
+                  Medicine Verification
                 </Link>
               </li>
               <li>

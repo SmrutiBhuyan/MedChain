@@ -39,46 +39,14 @@ export default function VerifyDrug() {
 
   const verifyMutation = useMutation({
     mutationFn: async (data: { batchNumber: string }) => {
-      // Professional blockchain verification logging
-      console.log("🔗 BLOCKCHAIN VERIFICATION - Drug authentication initiated");
+      // Drug verification logging
+      console.log("🔍 DRUG VERIFICATION - Checking drug authenticity");
       console.log(`📋 Batch Number: ${data.batchNumber}`);
-      console.log("🌐 Connecting to MedChain blockchain network...");
-      
-      setTimeout(() => {
-        console.log("⚡ Smart Contract: MedChain Drug Registry (0x742d35Cc6634C0532925a3b8D0C3B7e85eb04d56)");
-        console.log("🔍 Querying immutable drug records...");
-        console.log("📊 Scanning blockchain for batch authenticity...");
-      }, 200);
       
       const response = await apiRequest("POST", "/api/verify-drug", data);
       const result = await response.json();
       
-      // Blockchain transaction logging
-      setTimeout(() => {
-        console.log("🏗️ Creating blockchain verification transaction...");
-        console.log(`📋 Transaction Type: DRUG_VERIFICATION`);
-        console.log(`🔐 Generating transaction hash...`);
-        console.log(`⚡ Gas estimation: 28,500 wei`);
-        console.log(`🌐 Broadcasting to ${Math.floor(Math.random() * 20) + 30} nodes...`);
-        
-        setTimeout(() => {
-          const txHash = `0x${Math.random().toString(16).substr(2, 8)}${Math.random().toString(16).substr(2, 8)}${Math.random().toString(16).substr(2, 8)}${Math.random().toString(16).substr(2, 8)}`;
-          console.log(`✅ Transaction Hash: ${txHash}`);
-          console.log(`📈 Block Number: ${18500000 + Math.floor(Math.random() * 10000)}`);
-          console.log(`🔒 Verification record permanently stored on blockchain`);
-          console.log(`📊 Consensus reached: ${Math.floor(Math.random() * 15) + 45}/60 validators`);
-          
-          if (result.result === "counterfeit" || result.drug.isCounterfeit) {
-            console.log("⚠️  COUNTERFEIT DETECTED - Creating fraud alert transaction");
-            console.log("🚨 Fraud Alert: Broadcasting to regulatory authorities");
-            console.log("📋 Compliance: Automatic reporting to drug safety network");
-          } else {
-            console.log("✅ Drug Authentication: GENUINE - Safe for patient use");
-            console.log("🏥 Patient Safety: Verification complete and logged");
-          }
-          console.log("─────────────────────────────────────────────────────────");
-        }, 800);
-      }, 400);
+      console.log("✅ Verification completed");
       
       return result;
     },
@@ -161,10 +129,9 @@ export default function VerifyDrug() {
     setBatchNumber(result);
     setShowScanner(false);
     
-    // Professional blockchain QR scan logging
-    console.log("📱 QR SCANNER - Barcode detected and processed");
+    // QR scan logging
+    console.log("📱 QR SCANNER - Barcode detected");
     console.log(`🔍 Scanned Batch: ${result}`);
-    console.log("🔗 Initiating blockchain verification pipeline...");
     
     verifyMutation.mutate({ batchNumber: result });
   };

@@ -364,50 +364,7 @@ export default function BlockchainTracker() {
         </Card>
       </div>
 
-      {/* Live Blockchain Mining Console */}
-      <Card className="mb-8">
-        <CardHeader>
-          <CardTitle className="flex items-center">
-            <Shield className="mr-2 h-5 w-5 text-purple-600" />
-            Live Blockchain Mining Console
-          </CardTitle>
-          <p className="text-sm text-gray-600 mt-2">
-            Real-time blockchain mining and transaction processing
-          </p>
-        </CardHeader>
-        <CardContent>
-          <div className="bg-black text-green-400 p-4 rounded-lg font-mono text-sm h-80 overflow-y-auto">
-            <div className="space-y-1">
-              <div className="text-purple-400">⛏️  MedChain Mining Pool - Live Mining Console</div>
-              <div className="text-gray-500">═══════════════════════════════════════════════════════════</div>
-              <div>⚡ Mining Status: ACTIVE | Hashrate: {Math.floor(Math.random() * 500) + 100} TH/s</div>
-              <div>🔥 Miners Connected: {Math.floor(Math.random() * 200) + 50} | Pool Size: 847 nodes</div>
-              <div>💎 Difficulty: {Math.floor(Math.random() * 1000000) + 5000000} | Block Reward: 2.5 MED</div>
-              <div className="text-gray-500">───────────────────────────────────────────────────────────</div>
-              <div className="text-yellow-400">🏗️  Mining Block #{18500000 + Math.floor(Math.random() * 10000) + 1}...</div>
-              <div>⚡ Nonce: {Math.floor(Math.random() * 1000000)} | Hash: 0x{Math.random().toString(16).substr(2, 8)}...</div>
-              <div>📊 Drug Verification Tx: Paracetamol batch verified - Mumbai</div>
-              <div>✅ Tx Hash: 0x{Math.random().toString(16).substr(2, 8)}...{Math.random().toString(16).substr(2, 4)}</div>
-              <div>🔒 Fraud Report: Suspicious activity logged - Delhi region</div>
-              <div>📈 Inventory Update: Real-time stock changes broadcasted</div>
-              <div>🌐 Network Consensus: 52/60 validators confirmed</div>
-              <div className="text-green-400">✅ Block Mined Successfully! | Reward: 2.5 MED + 0.{Math.floor(Math.random() * 9) + 1} fees</div>
-              <div>🚨 Alert Tx: Critical stock level - Emergency medicine</div>
-              <div>⚡ Gas Used: {Math.floor(Math.random() * 100000) + 50000} wei | Gas Price: {Math.floor(Math.random() * 20) + 10} gwei</div>
-              <div>📈 Network Stats: 99.2% uptime | {Math.floor(Math.random() * 2000) + 1000} TPS</div>
-              <div className="text-blue-400">🔄 Next Block: Target time {Math.floor(Math.random() * 15) + 10}s | Mempool: {Math.floor(Math.random() * 100) + 50} pending</div>
-              <div className="text-gray-500">───────────────────────────────────────────────────────────</div>
-              <div className="text-cyan-400">🛡️  Security: Byzantine fault tolerance active | Consensus: PoS</div>
-              <div>⚡ Smart Contract Events: 12 drug verifications, 3 fraud reports</div>
-              <div className="text-purple-400">💰 Mining Revenue: 45.7 MED today | Pool Share: 2.3%</div>
-            </div>
-          </div>
-          <div className="mt-4 flex items-center justify-between text-sm text-gray-600">
-            <div>⛏️ Mining Pool Active</div>
-            <div>🕐 Last Block: {new Date().toLocaleTimeString()}</div>
-          </div>
-        </CardContent>
-      </Card>
+
     </div>
   );
 }
