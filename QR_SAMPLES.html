@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Samples - MedChain</title>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .qr-samples {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+        .qr-sample {
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid;
+        }
+        .counterfeit {
+            background-color: #fef2f2;
+            border-color: #dc2626;
+        }
+        .safe {
+            background-color: #f0f9ff;
+            border-color: #16a34a;
+        }
+        .qr-code {
+            margin: 20px 0;
+        }
+        .batch-number {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 10px 0;
+            font-family: monospace;
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .drug-info {
+            background-color: rgba(255,255,255,0.8);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            text-align: left;
+        }
+        .drug-info h3 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+        .drug-info p {
+            margin: 5px 0;
+            color: #666;
+        }
+        .status {
+            font-size: 18px;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 25px;
+            margin: 15px 0;
+            display: inline-block;
+        }
+        .counterfeit .status {
+            background-color: #dc2626;
+            color: white;
+        }
+        .safe .status {
+            background-color: #16a34a;
+            color: white;
+        }
+        .instructions {
+            background-color: #e8f5e8;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .warning {
+            background-color: #fef3cd;
+            border: 1px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>MedChain QR Code Samples</h1>
+        <p class="subtitle">Scan these QR codes to test the drug verification system</p>
+        
+        <div class="instructions">
+            <h3>How to Test:</h3>
+            <ol>
+                <li>Open MedChain app at <strong>localhost:5000</strong></li>
+                <li>Go to <strong>"Verify Drug"</strong> page</li>
+                <li>Click <strong>"Scan QR Code"</strong> button</li>
+                <li>Point camera at either QR code below</li>
+                <li>Watch the verification results</li>
+            </ol>
+        </div>
+        
+        <div class="qr-samples">
+            <!-- Counterfeit Drug -->
+            <div class="qr-sample counterfeit">
+                <h2>🚨 COUNTERFEIT DRUG</h2>
+                <div class="qr-code">
+                    <canvas id="counterfeit-qr"></canvas>
+                </div>
+                <div class="batch-number">EPI-2024-001</div>
+                <div class="status">⚠️ COUNTERFEIT</div>
+                <div class="drug-info">
+                    <h3>Epinephrine</h3>
+                    <p><strong>Manufacturer:</strong> EmergiMed</p>
+                    <p><strong>Strength:</strong> 1mg/ml</p>
+                    <p><strong>Category:</strong> Emergency</p>
+                    <p><strong>Use:</strong> Anaphylaxis treatment</p>
+                </div>
+                <div class="warning">
+                    <strong>Expected Result:</strong> System will detect counterfeit, show red alert, and auto-redirect to complaint portal with pre-filled form.
+                </div>
+            </div>
+            
+            <!-- Safe Drug -->
+            <div class="qr-sample safe">
+                <h2>✅ SAFE MEDICINE</h2>
+                <div class="qr-code">
+                    <canvas id="safe-qr"></canvas>
+                </div>
+                <div class="batch-number">INS-2024-026</div>
+                <div class="status">✅ GENUINE</div>
+                <div class="drug-info">
+                    <h3>Insulin</h3>
+                    <p><strong>Manufacturer:</strong> DiabetesRx</p>
+                    <p><strong>Strength:</strong> 100 units/ml</p>
+                    <p><strong>Category:</strong> Diabetes</p>
+                    <p><strong>Use:</strong> Blood sugar control</p>
+                </div>
+                <div class="warning" style="background-color: #d4edda; border-color: #c3e6cb;">
+                    <strong>Expected Result:</strong> System will verify as genuine, show green checkmark, and display drug information with blockchain verification.
+                </div>
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <h3>Alternative Manual Testing:</h3>
+            <p>If QR scanning doesn't work, you can manually enter these batch numbers:</p>
+            <ul>
+                <li><strong>EPI-2024-001</strong> - Will trigger counterfeit detection</li>
+                <li><strong>INS-2024-026</strong> - Will show as genuine/safe</li>
+            </ul>
+        </div>
+        
+        <div class="warning">
+            <strong>Note:</strong> The counterfeit detection system is for demonstration purposes. In a real scenario, only verified pharmaceutical companies would be able to generate legitimate QR codes.
+        </div>
+    </div>
+    
+    <script>
+        // Generate QR codes when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Generate counterfeit QR code
+            QRCode.toCanvas(document.getElementById('counterfeit-qr'), 'EPI-2024-001', {
+                width: 200,
+                height: 200,
+                color: {
+                    dark: '#dc2626',
+                    light: '#ffffff'
+                }
+            }, function (error) {
+                if (error) console.error('Counterfeit QR error:', error);
+            });
+            
+            // Generate safe QR code
+            QRCode.toCanvas(document.getElementById('safe-qr'), 'INS-2024-026', {
+                width: 200,
+                height: 200,
+                color: {
+                    dark: '#16a34a',
+                    light: '#ffffff'
+                }
+            }, function (error) {
+                if (error) console.error('Safe QR error:', error);
+            });
+        });
+    </script>
+</body>
+</html>
